@@ -50,8 +50,16 @@ one shape of decision:
 |---|---|---|
 | **Purpose selection** | threshold | Which control at which number of options |
 | **Change of address** | state dependency | Which fields appear, and what happens to an answer when a field is withdrawn |
+| **Waiting list** | space conflict | What gives way when a person's name does not fit the column |
 
-The second one is the harder test. Its conditions are declared as data, so the
+The third is the one with consequences outside the screen: a truncated name can
+identify the wrong person, or nobody. Its rule is a ladder of sacrifices —
+drop the original-script form, then abbreviate given names, then wrap — with
+the family name out of bounds throughout. The sample names come from several
+naming systems on purpose: a rule that only works on short two-part names is
+not a rule, it is an assumption that fails silently for everyone else.
+
+The second one is the harder test of the format itself. Its conditions are declared as data, so the
 same declaration drives the prototype, reads as a table, and exports to
 markdown — instead of a reader having to parse an if-chain. And its central
 promise is not the reveal but the **retention**: someone who picks "married",

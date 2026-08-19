@@ -390,3 +390,34 @@ body {
   color: var(--text); overflow-x: auto;
 }
 .wr-origin-foot { margin: 20px 0 0; color: var(--text-muted); max-width: 74ch; font-size: 13px; }
+
+/* ---- Waiting list ---- */
+.wr-list { font-size: 13px; }
+.wr-list-row {
+  display: grid;
+  grid-template-columns: 52px var(--name-col, 300px) 70px 46px;
+  gap: 12px; align-items: start;
+  padding: 7px 0; border-bottom: 1px solid var(--border);
+}
+.wr-list-head {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--text-muted); border-bottom-color: var(--border-strong);
+}
+.wr-col-ticket { font-variant-numeric: tabular-nums; color: var(--text-muted); }
+.wr-col-name { min-width: 0; }
+.wr-col-waited, .wr-col-desk { font-variant-numeric: tabular-nums; color: var(--text-muted); }
+
+.wr-name-line { display: inline; }
+.wr-name-line2 { display: block; }
+.wr-name-original { color: var(--text-muted); }
+
+/* The row that had nothing left to give up: it overflows on purpose, and
+   says so, rather than quietly cutting the family name. */
+.wr-col-name[data-step='overflow'] { white-space: nowrap; }
+.wr-col-name[data-step='overflow'] .wr-name-line {
+  border-bottom: 1px dotted var(--accent-border);
+}
+
+.wr-ladder { margin: 0; padding-left: 20px; }
+.wr-ladder li { margin-bottom: 5px; max-width: 68ch; }
+.wr-trace-line-off { opacity: .45; }

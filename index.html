@@ -80,9 +80,11 @@ Rule: waitingroom → Purpose selection → Rules</pre>
 <script type="module">
 import { selectionControl } from './rules/selection.js';
 import { conditionalDisclosure } from './rules/disclosure.js';
+import { nameTruncation } from './rules/names.js';
 import { serviceList, MAX_SERVICES } from './components/data.js';
 import { renderSelectionField } from './components/selection-field.js';
 import { renderAddressChange } from './components/address-change.js';
+import { renderWaitingList } from './components/waiting-list.js';
 
 /* Two sources per component, because they answer different questions: the spec
    says what has to be possible, Figma says what it looks like. Neither states
@@ -115,6 +117,21 @@ const COMPONENTS = [
     // No separate control panel: every answer in the form is the control.
     console: null,
     mount(stage) { renderAddressChange(stage); },
+  },
+  {
+    key: 'waiting',
+    name: 'Waiting list',
+    kind: 'Space conflict',
+    rule: nameTruncation,
+    sources: {
+      spec: 'https://github.com/AisuStudio/waitingroom/blob/main/spec/waiting-list.md',
+      figma: null,
+    },
+    console: {
+      label: 'Name column width',
+      min: 90, max: 420, value: 300,
+    },
+    mount(stage, w) { renderWaitingList(stage, w); },
   },
 ];
 
@@ -198,6 +215,14 @@ function rulesMarkup(rule) {
       ${rule.rationale.split('\n\n').map((p) => `<p>${esc(p)}</p>`).join('')}
     </div>
 
+    ${rule.ladder ? `
+    <div class="wr-rule-section">
+      <h4>The ladder — first rung that fits wins</h4>
+      <ol class="wr-ladder">
+        ${rule.ladder.map((r) => `<li><code>${esc(r.step)}</code> — ${esc(r.description)}</li>`).join('')}
+      </ol>
+    </div>` : ''}
+
     ${rule.conditions ? `
     <div class="wr-rule-section">
       <h4>Conditions</h4>
@@ -254,6 +279,23 @@ function codeMarkup(rule) {
 
 function snippet(rule) {
   const head = [`// ${rule.title}`, `// ${rule.rule}`, ''];
+
+  if (rule.ladder) {
+    return [
+      ...head,
+      'const LADDER = [',
+      ...rule.ladder.map((r) => `  '${r.step}',`),
+      '];',
+      '',
+      '// Try each rung in order; the first that fits wins.',
+      '// `measure` is injected — the rule knows the strategy, not how text',
+      '// is measured, so the same decision is reproducible outside a browser.',
+      'function fitName(name, availableWidth, measure) { /* see rules/names.js */ }',
+      '',
+      '// The family name is never shortened. If nothing fits, the column',
+      '// overflows instead.',
+    ].join('\n');
+  }
 
   if (rule.conditions) {
     return [
