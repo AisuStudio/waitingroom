@@ -41,6 +41,23 @@ build the component:
 Every "no, I'd still need…" is a line missing from the rule. That is the
 measurement; the prototype is only the means.
 
+## What is in here
+
+Two rules, deliberately of different types — the format has to carry more than
+one shape of decision:
+
+| Component | Rule type | The question it settles |
+|---|---|---|
+| **Purpose selection** | threshold | Which control at which number of options |
+| **Change of address** | state dependency | Which fields appear, and what happens to an answer when a field is withdrawn |
+
+The second one is the harder test. Its conditions are declared as data, so the
+same declaration drives the prototype, reads as a table, and exports to
+markdown — instead of a reader having to parse an if-chain. And its central
+promise is not the reveal but the **retention**: someone who picks "married",
+enters a partner, then corrects the entry to "single" has made a correction,
+not a request to delete data. Switch back and the entry is still there.
+
 ## Structure
 
 ```

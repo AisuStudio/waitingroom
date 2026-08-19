@@ -25,157 +25,255 @@
     <button class="wr-level-chip" aria-current="true" type="button">Assemblies</button>
   </div>
 
-  <h2 class="wr-component-name">Purpose selection</h2>
+  <div id="components"></div>
 
-  <div class="wr-tabbar" role="tablist">
-    <button class="wr-tab" role="tab" aria-selected="true"  data-panel="component">Component</button>
-    <button class="wr-tab" role="tab" aria-selected="false" data-panel="rules">Rules</button>
-    <button class="wr-tab" role="tab" aria-selected="false" data-panel="code">Code</button>
-    <span class="wr-links">
-      <a class="wr-ext-link" id="link-spec"  href="#">Spec&nbsp;↗</a>
-      <a class="wr-ext-link" id="link-figma" href="#">Figma&nbsp;↗</a>
-    </span>
-  </div>
+  <!-- ----------------------------------------- Where the rules sit in Figma -->
+  <section class="wr-origin">
+    <h2 class="wr-origin-title">Where the rules sit in Figma</h2>
+    <p class="wr-origin-lead">
+      The designer states the behaviour in the component's own description — a few
+      sentences, at the component, without leaving the tool they are already in. It
+      travels with the component and is readable through the API, which is what makes
+      it a channel rather than a note.
+    </p>
 
-  <!-- ------------------------------------------------------- COMPONENT -->
-  <section class="wr-panel" id="panel-component" role="tabpanel">
-    <div class="wr-console">
-      <p class="wr-console-title">Control panel</p>
-      <div class="wr-control">
-        <label for="count">Number of options</label>
-        <input type="range" id="count" min="0" max="12" value="3" step="1">
-        <output id="count-out">3</output>
+    <div class="wr-origin-split">
+      <figure class="wr-origin-figure">
+        <img src="assets/purpose-selection-figma.png"
+             alt="The Purpose selection component set in Figma, showing its two variants side by side: a radio group with three options, and a select.">
+        <figcaption>
+          The two variants show what it looks like either side of the threshold.
+        </figcaption>
+      </figure>
+
+      <div class="wr-origin-desc">
+        <p class="wr-origin-caption">Component description, read back from Figma</p>
+        <pre class="wr-origin-quote">BEHAVIOUR
+Up to 4 options: radio group — every option visible at once.
+From 5 options on: select — the list would otherwise crowd out the context.
+Exactly one option: shown as a set value, not as a choice.
+No options: the field is not rendered.
+
+Spec: WR-104
+Rule: waitingroom → Purpose selection → Rules</pre>
       </div>
     </div>
-    <div class="wr-stage" id="stage"></div>
+
+    <p class="wr-origin-foot">
+      What it deliberately is <em>not</em>: a full specification. Where the threshold
+      sits, what happens while options are still loading, whether one is preselected —
+      those get settled here, where they can be executed and checked. Figma states the
+      intent; this page states what happens in every case.
+    </p>
   </section>
 
-  <!-- ----------------------------------------------------------- RULES -->
-  <section class="wr-panel" id="panel-rules" role="tabpanel" hidden></section>
-
-  <!-- ------------------------------------------------------------ CODE -->
-  <section class="wr-panel" id="panel-code" role="tabpanel" hidden></section>
-
   <p class="wr-foot">
-    All three views come from a single file — <code>rules/selection.js</code>. Change
-    the threshold there and the prototype, the rule text and the code change together.
-    There is no second place to keep in sync. Sample data is synthetic (a citizen
-    registration office) with no connection to any real case.
+    Each component's three views come from a single file in <code>rules/</code>.
+    Change a threshold or a condition there and the prototype, the rule text and the
+    code change together. There is no second place to keep in sync. All sample data is
+    synthetic — an invented citizen registration office, with no connection to any real
+    case or person.
   </p>
 
 </div>
 
 <script type="module">
-import { selectionControl as rule } from './rules/selection.js';
+import { selectionControl } from './rules/selection.js';
+import { conditionalDisclosure } from './rules/disclosure.js';
 import { serviceList, MAX_SERVICES } from './components/data.js';
 import { renderSelectionField } from './components/selection-field.js';
+import { renderAddressChange } from './components/address-change.js';
 
-/* Where this component comes from. Two links, because the two sources answer
-   different questions: the spec says what it is for, Figma says what it looks
-   like. Neither of them states the behaviour — that is what this page adds. */
-const SOURCES = {
-  spec: {
-    href: 'https://github.com/AisuStudio/waitingroom/blob/main/spec/purpose-selection.md',
-    title: 'Specification WR-104 — what must be possible',
+/* Two sources per component, because they answer different questions: the spec
+   says what has to be possible, Figma says what it looks like. Neither states
+   the behaviour — that is what this page adds. */
+const COMPONENTS = [
+  {
+    key: 'selection',
+    name: 'Purpose selection',
+    kind: 'Threshold',
+    rule: selectionControl,
+    sources: {
+      spec: 'https://github.com/AisuStudio/waitingroom/blob/main/spec/purpose-selection.md',
+      figma: 'https://www.figma.com/design/y16GzBOeP9CSuj3HHH6xO6?node-id=1-19',
+    },
+    console: {
+      label: 'Number of options',
+      min: 0, max: MAX_SERVICES, value: 3,
+    },
+    mount(stage, n) { renderSelectionField(stage, serviceList(n)); },
   },
-  figma: {
-    href: 'https://www.figma.com/design/y16GzBOeP9CSuj3HHH6xO6?node-id=1-19',
-    title: 'Figma component — what it looks like either side of the threshold',
+  {
+    key: 'address',
+    name: 'Change of address',
+    kind: 'State dependency',
+    rule: conditionalDisclosure,
+    sources: {
+      spec: 'https://github.com/AisuStudio/waitingroom/blob/main/spec/change-of-address.md',
+      figma: null,
+    },
+    // No separate control panel: every answer in the form is the control.
+    console: null,
+    mount(stage) { renderAddressChange(stage); },
   },
-};
+];
 
-/* ---------------------------------------------------------------- Tabs */
-const tabs = [...document.querySelectorAll('.wr-tab')];
-const panels = {
-  component: document.getElementById('panel-component'),
-  rules: document.getElementById('panel-rules'),
-  code: document.getElementById('panel-code'),
-};
-tabs.forEach((tab) => {
-  tab.addEventListener('click', () => {
+const root = document.getElementById('components');
+COMPONENTS.forEach((cmp) => root.append(buildBlock(cmp)));
+
+function buildBlock(cmp) {
+  const section = document.createElement('section');
+  section.className = 'wr-component';
+  section.innerHTML = `
+    <div class="wr-component-head">
+      <h2 class="wr-component-name">${esc(cmp.name)}</h2>
+      <span class="wr-kind">${esc(cmp.kind)}</span>
+    </div>
+    <div class="wr-tabbar" role="tablist">
+      <button class="wr-tab" role="tab" aria-selected="true"  data-panel="component">Component</button>
+      <button class="wr-tab" role="tab" aria-selected="false" data-panel="rules">Rules</button>
+      <button class="wr-tab" role="tab" aria-selected="false" data-panel="code">Code</button>
+      <span class="wr-links">
+        ${link('Spec', cmp.sources.spec)}
+        ${link('Figma', cmp.sources.figma)}
+      </span>
+    </div>
+    <div class="wr-panel" data-panel="component">
+      ${cmp.console ? consoleMarkup(cmp) : ''}
+      <div class="wr-stage"></div>
+    </div>
+    <div class="wr-panel" data-panel="rules" hidden>${rulesMarkup(cmp.rule)}</div>
+    <div class="wr-panel" data-panel="code"  hidden>${codeMarkup(cmp.rule)}</div>
+  `;
+
+  const tabs = [...section.querySelectorAll('.wr-tab')];
+  const panels = [...section.querySelectorAll('.wr-panel')];
+  tabs.forEach((tab) => tab.addEventListener('click', () => {
     tabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
-    Object.entries(panels).forEach(([key, el]) => { el.hidden = key !== tab.dataset.panel; });
-  });
-});
+    panels.forEach((p) => { p.hidden = p.dataset.panel !== tab.dataset.panel; });
+  }));
 
-for (const [key, src] of Object.entries(SOURCES)) {
-  const a = document.getElementById(`link-${key}`);
-  a.href = src.href;
-  a.title = src.title;
-  if (src.href === '#') a.classList.add('wr-ext-link-empty');
+  const stage = section.querySelector('.wr-stage');
+  if (cmp.console) {
+    const slider = section.querySelector('input[type=range]');
+    const out = section.querySelector('output');
+    const draw = () => { out.textContent = slider.value; cmp.mount(stage, Number(slider.value)); };
+    slider.addEventListener('input', draw);
+    draw();
+  } else {
+    cmp.mount(stage);
+  }
+  return section;
 }
 
-/* ------------------------------------------------------- COMPONENT tab */
-const slider = document.getElementById('count');
-const out = document.getElementById('count-out');
-const stage = document.getElementById('stage');
-slider.max = String(MAX_SERVICES);
-
-function draw() {
-  const n = Number(slider.value);
-  out.textContent = n;
-  renderSelectionField(stage, serviceList(n));
+function link(label, href) {
+  if (!href) {
+    return `<span class="wr-ext-link wr-ext-link-empty" title="Not linked yet">${label}&nbsp;↗</span>`;
+  }
+  // Opens in a new tab — leaving the page would lose the state the control
+  // panel is currently in.
+  return `<a class="wr-ext-link" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${label}&nbsp;↗</a>`;
 }
-slider.addEventListener('input', draw);
-draw();
 
-/* ----------------------------------------------------------- RULES tab */
-// Rendered from the rule's own metadata, not from a second copy of it.
-panels.rules.innerHTML = `
-  <h3 class="wr-rule-head">${esc(rule.title)}</h3>
-  <p class="wr-rule-statement">${esc(rule.rule)}</p>
+function consoleMarkup(cmp) {
+  const c = cmp.console;
+  return `
+    <div class="wr-console">
+      <p class="wr-console-title">Control panel</p>
+      <div class="wr-control">
+        <label>${esc(c.label)}</label>
+        <input type="range" min="${c.min}" max="${c.max}" value="${c.value}" step="1">
+        <output>${c.value}</output>
+      </div>
+    </div>`;
+}
 
-  <div class="wr-rule-section">
-    <h4>Rationale</h4>
-    <p>${esc(rule.rationale)}</p>
-  </div>
+function rulesMarkup(rule) {
+  return `
+    <h3 class="wr-rule-head">${esc(rule.title)}</h3>
+    <p class="wr-rule-statement">${esc(rule.rule)}</p>
 
-  <div class="wr-rule-section">
-    <h4>Edge cases</h4>
-    <dl>
-      ${rule.edgeCases.map((e) => `
-        <div class="wr-edge">
-          <dt>${esc(e.case)}</dt>
-          <dd>${esc(e.handling)}</dd>
-        </div>`).join('')}
-    </dl>
-  </div>
+    <div class="wr-rule-section">
+      <h4>Rationale</h4>
+      ${rule.rationale.split('\n\n').map((p) => `<p>${esc(p)}</p>`).join('')}
+    </div>
 
-  <div class="wr-rule-section">
-    <h4>Open — asked, not invented</h4>
-    <ul class="wr-open">
-      ${rule.openQuestions.map((q) => `<li>${esc(q)}</li>`).join('')}
-    </ul>
-  </div>
+    ${rule.conditions ? `
+    <div class="wr-rule-section">
+      <h4>Conditions</h4>
+      <table class="wr-cond">
+        <thead><tr><th>Field</th><th>Shown when</th><th>Reads</th></tr></thead>
+        <tbody>
+          ${rule.conditions.map((c) => `
+            <tr>
+              <td><code>${esc(c.field)}</code><div class="wr-cond-label">${esc(c.label)}</div></td>
+              <td>${esc(c.when)}</td>
+              <td><code>${esc(c.dependsOn)}</code></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+      <p class="wr-cond-base">Always present: ${rule.baseFields.map((f) => `<code>${esc(f)}</code>`).join(', ')}</p>
+    </div>` : ''}
 
-  <div class="wr-rule-section">
-    <h4>Provenance</h4>
-    <ul class="wr-prov">
-      ${rule.provenance.map((p) => `
-        <li><strong>${esc(p.date)}</strong> — ${esc(p.change)} · ${esc(p.by)} · ${esc(p.basis)}</li>`).join('')}
-    </ul>
-  </div>
-`;
+    <div class="wr-rule-section">
+      <h4>Edge cases</h4>
+      <dl>
+        ${rule.edgeCases.map((e) => `
+          <div class="wr-edge">
+            <dt>${esc(e.case)}</dt>
+            <dd>${esc(e.handling)}</dd>
+          </div>`).join('')}
+      </dl>
+    </div>
 
-/* ------------------------------------------------------------ CODE tab */
-// Shows literally the function the prototype above executes.
-// Not a retelling of it — the same one.
-panels.code.innerHTML = `
-  <p class="wr-code-note">
-    Deliberately framework-free: the decision, not the rendering. It should still hold
-    when the component library moves a major version. This is the same function the
-    prototype runs in the Component tab.
-  </p>
-  <pre class="wr-code"><code>${esc(snippet())}</code></pre>
-`;
+    <div class="wr-rule-section">
+      <h4>Open — asked, not invented</h4>
+      <ul class="wr-open">
+        ${rule.openQuestions.map((q) => `<li>${esc(q)}</li>`).join('')}
+      </ul>
+    </div>
 
-function snippet() {
+    <div class="wr-rule-section">
+      <h4>Provenance</h4>
+      <ul class="wr-prov">
+        ${rule.provenance.map((p) => `
+          <li><strong>${esc(p.date)}</strong> — ${esc(p.change)} · ${esc(p.by)} · ${esc(p.basis)}</li>`).join('')}
+      </ul>
+    </div>`;
+}
+
+function codeMarkup(rule) {
+  return `
+    <p class="wr-code-note">
+      Deliberately framework-free: the decision, not the rendering. It should still hold
+      when the component library moves a major version. This is the same logic the
+      prototype runs in the Component tab.
+    </p>
+    <pre class="wr-code"><code>${esc(snippet(rule))}</code></pre>`;
+}
+
+function snippet(rule) {
+  const head = [`// ${rule.title}`, `// ${rule.rule}`, ''];
+
+  if (rule.conditions) {
+    return [
+      ...head,
+      'const CONDITIONS = [',
+      ...rule.conditions.map((c) => `  { field: '${c.field}', when: "${c.when}" },`),
+      '];',
+      '',
+      'function visibleFields(answers) {',
+      '  return CONDITIONS.filter((c) => c.test(answers)).map((c) => c.field);',
+      '}',
+      '',
+      '// Withdrawing a field does not clear what it held — see edge cases.',
+    ].join('\n');
+  }
+
   return [
-    `// ${rule.title}`,
-    `// ${rule.rule}`,
-    ``,
+    ...head,
     `const THRESHOLD = ${rule.threshold};`,
-    ``,
+    '',
     rule.apply.toString()
       .replace(/^apply/, 'function controlType')
       .replace(/this\.threshold/g, 'THRESHOLD'),

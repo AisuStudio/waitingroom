@@ -289,3 +289,104 @@ body {
   margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border);
   color: var(--text-muted); font-size: 12px; max-width: 70ch;
 }
+
+/* ============================================================================
+   Multiple components on one page
+   ========================================================================= */
+
+.wr-component { margin-bottom: 48px; }
+.wr-component-head { display: flex; align-items: baseline; gap: 10px; margin: 28px 0 10px; }
+.wr-kind {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--text-muted); border: 1px solid var(--border);
+  border-radius: 999px; padding: 2px 8px;
+}
+
+/* ---- The change-of-address form ---- */
+.wr-form { display: grid; gap: 14px; max-width: 460px; }
+.wr-form-row { display: grid; gap: 5px; }
+.wr-form-label { font-size: 13px; font-weight: 600; }
+
+/* Revealed fields carry a marker, so it is visible at a glance which parts of
+   the form are there because of an answer and which are always present. */
+.wr-form-row-revealed {
+  border-left: 2px solid var(--accent-border);
+  padding-left: 12px;
+  margin-left: -14px;
+}
+
+.wr-input {
+  background: var(--select-bg); border: 1px solid var(--select-border);
+  color: var(--select-text); border-radius: 6px;
+  padding: 8px 10px; font-size: 14px; font-family: inherit; width: 100%;
+}
+.wr-input::placeholder { color: var(--text-muted); }
+
+.wr-child-stack { display: grid; gap: 8px; }
+.wr-child { display: flex; align-items: center; gap: 10px; }
+.wr-child-num {
+  flex: none; width: 22px; height: 22px; border-radius: 999px;
+  background: var(--surface-sunk); color: var(--text-muted);
+  font-size: 11px; display: grid; place-items: center;
+}
+
+/* ---- Trace block for the conditional rule ---- */
+.wr-trace-block {
+  margin-top: 20px; padding: 12px 14px;
+  background: var(--accent-bg); border: 1px solid var(--accent-border);
+  border-radius: 8px; font-size: 12px; color: var(--accent-text);
+}
+.wr-trace-title { font-weight: 700; margin-bottom: 6px; }
+.wr-trace-line { margin-bottom: 3px; }
+.wr-trace-line code { font-size: 11.5px; }
+.wr-trace-kept {
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid var(--accent-border); font-style: italic;
+}
+
+/* ---- Conditions table in the Rules tab ---- */
+.wr-cond { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.wr-cond th {
+  text-align: left; font-size: 10px; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--text-muted);
+  padding: 0 10px 6px 0; border-bottom: 1px solid var(--border);
+}
+.wr-cond td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+.wr-cond-label { color: var(--text-muted); font-size: 11.5px; margin-top: 2px; }
+.wr-cond-base { margin: 10px 0 0; color: var(--text-muted); font-size: 12px; }
+
+/* ============================================================================
+   Where the rules sit in Figma
+   ========================================================================= */
+
+.wr-origin {
+  margin: 56px 0 0; padding: 24px;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface);
+}
+.wr-origin-title { font-size: 16px; margin: 0 0 8px; }
+.wr-origin-lead { margin: 0 0 20px; color: var(--text-muted); max-width: 70ch; }
+
+.wr-origin-split { display: grid; gap: 20px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .wr-origin-split { grid-template-columns: 1fr 1fr; } }
+
+.wr-origin-figure { margin: 0; }
+.wr-origin-figure img {
+  width: 100%; height: auto; display: block;
+  border: 1px solid var(--border); border-radius: 8px; background: var(--bg);
+}
+.wr-origin-figure figcaption {
+  margin-top: 8px; font-size: 11.5px; color: var(--text-muted);
+}
+.wr-origin-caption {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--text-muted); margin: 0 0 6px;
+}
+.wr-origin-quote {
+  margin: 0; padding: 12px 14px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11.5px; line-height: 1.6; white-space: pre-wrap;
+  color: var(--text); overflow-x: auto;
+}
+.wr-origin-foot { margin: 20px 0 0; color: var(--text-muted); max-width: 74ch; font-size: 13px; }
