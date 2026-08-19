@@ -44,7 +44,15 @@ recorded so they can be answered rather than quietly assumed.
 
 ${rule.openQuestions.map((q) => `- ${q}`).join('\n')}
 
-${rule.ladder ? `## The ladder
+${rule.strategies ? `## Options considered
+
+All three are selectable in the prototype's control panel, including the
+rejected one — a reason that can be run is worth more than one that has to be
+believed.
+
+${Object.entries(rule.strategies).map(([, v]) => `### ${v.label} — ${v.status}\n\n${v.short}\n\n${v.why}`).join('\n\n')}
+
+` : ''}${rule.ladder ? `## The ladder
 
 Tried in order; the first rung that fits wins.
 

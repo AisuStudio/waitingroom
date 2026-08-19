@@ -17,7 +17,10 @@
         rule becomes executable before it gets built.
       </p>
     </div>
-    <button class="wr-theme-toggle" id="theme-toggle" type="button">Dark</button>
+    <div class="wr-topbar-actions">
+      <a class="wr-theme-toggle" href="flow.html">The flow →</a>
+      <button class="wr-theme-toggle" id="theme-toggle" type="button">Dark</button>
+    </div>
   </div>
 
   <div class="wr-level">
@@ -85,6 +88,9 @@ import { serviceList, MAX_SERVICES } from './components/data.js';
 import { renderSelectionField } from './components/selection-field.js';
 import { renderAddressChange } from './components/address-change.js';
 import { renderWaitingList } from './components/waiting-list.js';
+import { applyStoredTheme, wireThemeToggle } from './theme.js';
+
+applyStoredTheme();
 
 /* Two sources per component, because they answer different questions: the spec
    says what has to be possible, Figma says what it looks like. Neither states
@@ -99,11 +105,10 @@ const COMPONENTS = [
       spec: 'https://github.com/AisuStudio/waitingroom/blob/main/spec/purpose-selection.md',
       figma: 'https://www.figma.com/design/y16GzBOeP9CSuj3HHH6xO6?node-id=1-19',
     },
-    console: {
-      label: 'Number of options',
-      min: 0, max: MAX_SERVICES, value: 3,
-    },
-    mount(stage, n) { renderSelectionField(stage, serviceList(n)); },
+    controls: [
+      { key: 'count', type: 'range', label: 'Number of options', min: 0, max: MAX_SERVICES, value: 3 },
+    ],
+    mount(stage, s) { renderSelectionField(stage, serviceList(Number(s.count))); },
   },
   {
     key: 'address',
@@ -115,7 +120,7 @@ const COMPONENTS = [
       figma: 'https://www.figma.com/design/y16GzBOeP9CSuj3HHH6xO6?node-id=7-2',
     },
     // No separate control panel: every answer in the form is the control.
-    console: null,
+    controls: null,
     mount(stage) { renderAddressChange(stage); },
   },
   {
@@ -127,11 +132,17 @@ const COMPONENTS = [
       spec: 'https://github.com/AisuStudio/waitingroom/blob/main/spec/waiting-list.md',
       figma: 'https://www.figma.com/design/y16GzBOeP9CSuj3HHH6xO6?node-id=7-38',
     },
-    console: {
-      label: 'Name column width',
-      min: 90, max: 420, value: 300,
-    },
-    mount(stage, w) { renderWaitingList(stage, w); },
+    controls: [
+      { key: 'width', type: 'range', label: 'Name column width', min: 90, max: 420, value: 300 },
+      {
+        key: 'strategy', type: 'choice', label: 'Strategy',
+        value: nameTruncation.chosen,
+        options: Object.entries(nameTruncation.strategies).map(([k, v]) => ({
+          value: k, label: v.label, status: v.status,
+        })),
+      },
+    ],
+    mount(stage, s) { renderWaitingList(stage, Number(s.width), s.strategy); },
   },
 ];
 
@@ -156,11 +167,11 @@ function buildBlock(cmp) {
       </span>
     </div>
     <div class="wr-panel" data-panel="component">
-      ${cmp.console ? consoleMarkup(cmp) : ''}
+      ${cmp.controls ? consoleMarkup(cmp) : ''}
       <div class="wr-stage"></div>
     </div>
     <div class="wr-panel" data-panel="rules" hidden>${rulesMarkup(cmp.rule)}</div>
-    <div class="wr-panel" data-panel="code"  hidden>${codeMarkup(cmp.rule)}</div>
+    <div class="wr-panel" data-panel="code"  hidden></div>
   `;
 
   const tabs = [...section.querySelectorAll('.wr-tab')];
@@ -171,15 +182,44 @@ function buildBlock(cmp) {
   }));
 
   const stage = section.querySelector('.wr-stage');
-  if (cmp.console) {
-    const slider = section.querySelector('input[type=range]');
-    const out = section.querySelector('output');
-    const draw = () => { out.textContent = slider.value; cmp.mount(stage, Number(slider.value)); };
-    slider.addEventListener('input', draw);
-    draw();
-  } else {
-    cmp.mount(stage);
-  }
+  const codePanel = section.querySelector('.wr-panel[data-panel=code]');
+
+  // One state object per component. The control panel writes into it, and
+  // both the prototype and the code view read from it — so a change to the
+  // strategy is visible in the running component and in the snippet at the
+  // same moment, without either being regenerated from a second source.
+  const state = {};
+  (cmp.controls ?? []).forEach((c) => { state[c.key] = String(c.value); });
+
+  const draw = () => {
+    cmp.mount(stage, state);
+    codePanel.innerHTML = codeMarkup(cmp.rule, state);
+  };
+
+  (cmp.controls ?? []).forEach((c) => {
+    const input = section.querySelector(`[data-control='${c.key}']`);
+    if (!input) return;
+    if (c.type === 'range') {
+      const out = section.querySelector(`output[data-for='${c.key}']`);
+      input.addEventListener('input', () => {
+        state[c.key] = input.value;
+        out.textContent = input.value;
+        draw();
+      });
+    } else {
+      // A radio group has one input per option, so the listener goes on all
+      // of them and the value comes from whichever is checked.
+      section.querySelectorAll(`[data-control='${c.key}']`).forEach((radio) => {
+        radio.addEventListener('change', () => {
+          if (!radio.checked) return;
+          state[c.key] = radio.value;
+          draw();
+        });
+      });
+    }
+  });
+
+  draw();
   return section;
 }
 
@@ -193,14 +233,36 @@ function link(label, href) {
 }
 
 function consoleMarkup(cmp) {
-  const c = cmp.console;
   return `
     <div class="wr-console">
       <p class="wr-console-title">Control panel</p>
+      ${cmp.controls.map(controlMarkup).join('')}
+    </div>`;
+}
+
+function controlMarkup(c) {
+  if (c.type === 'range') {
+    return `
       <div class="wr-control">
         <label>${esc(c.label)}</label>
-        <input type="range" min="${c.min}" max="${c.max}" value="${c.value}" step="1">
-        <output>${c.value}</output>
+        <input type="range" data-control="${esc(c.key)}"
+               min="${c.min}" max="${c.max}" value="${c.value}" step="1">
+        <output data-for="${esc(c.key)}">${c.value}</output>
+      </div>`;
+  }
+  // A rejected option stays selectable on purpose: the reason it was rejected
+  // is easier to see than to argue about.
+  return `
+    <div class="wr-control">
+      <label>${esc(c.label)}</label>
+      <div class="wr-choice" role="radiogroup" aria-label="${esc(c.label)}">
+        ${c.options.map((o) => `
+          <label class="wr-choice-item${o.status === 'rejected' ? ' wr-choice-rejected' : ''}">
+            <input type="radio" name="${esc(c.key)}" data-control="${esc(c.key)}"
+                   value="${esc(o.value)}"${o.value === c.value ? ' checked' : ''}>
+            <span>${esc(o.label)}</span>
+            ${o.status === 'rejected' ? '<span class="wr-choice-tag">rejected</span>' : ''}
+          </label>`).join('')}
       </div>
     </div>`;
 }
@@ -214,6 +276,21 @@ function rulesMarkup(rule) {
       <h4>Rationale</h4>
       ${rule.rationale.split('\n\n').map((p) => `<p>${esc(p)}</p>`).join('')}
     </div>
+
+    ${rule.strategies ? `
+    <div class="wr-rule-section">
+      <h4>Options considered</h4>
+      <p class="wr-cond-base">All three are selectable in the control panel, including the
+      rejected one — a reason that can be run is worth more than a reason that has to be
+      believed.</p>
+      <dl>
+        ${Object.entries(rule.strategies).map(([k, v]) => `
+          <div class="wr-edge${v.status === 'rejected' ? ' wr-edge-rejected' : ''}">
+            <dt>${esc(v.label)} <span class="wr-status ${v.status === 'rejected' ? 'wr-status-planned' : 'wr-status-built'}">${esc(v.status)}</span></dt>
+            <dd>${esc(v.why)}</dd>
+          </div>`).join('')}
+      </dl>
+    </div>` : ''}
 
     ${rule.ladder ? `
     <div class="wr-rule-section">
@@ -267,17 +344,36 @@ function rulesMarkup(rule) {
     </div>`;
 }
 
-function codeMarkup(rule) {
+function codeMarkup(rule, state = {}) {
+  const strategy = rule.strategies?.[state.strategy];
+  const note = strategy
+    ? `Showing the <strong>${esc(strategy.label)}</strong> strategy${
+        strategy.status === 'rejected'
+          ? ' — <strong>rejected</strong>, shown so the reason can be seen rather than argued about'
+          : ''
+      }. Switch it in the control panel and this changes with the prototype.`
+    : 'Deliberately framework-free: the decision, not the rendering. It should still '
+      + 'hold when the component library moves a major version. This is the same logic '
+      + 'the prototype runs in the Component tab.';
+
   return `
-    <p class="wr-code-note">
-      Deliberately framework-free: the decision, not the rendering. It should still hold
-      when the component library moves a major version. This is the same logic the
-      prototype runs in the Component tab.
-    </p>
-    <pre class="wr-code"><code>${esc(snippet(rule))}</code></pre>`;
+    <p class="wr-code-note">${note}</p>
+    <pre class="wr-code"><code>${esc(snippet(rule, state))}</code></pre>`;
 }
 
-function snippet(rule) {
+function snippet(rule, state = {}) {
+  // The name rule carries several strategies; show the one currently selected,
+  // taken straight from the object the prototype is running.
+  const strategy = rule.strategies?.[state.strategy];
+  if (strategy) {
+    return [
+      `// ${strategy.label}${strategy.status === 'rejected' ? '  — REJECTED' : ''}`,
+      `// ${strategy.short}`,
+      '',
+      strategy.apply.toString().replace(/^apply/, 'function fitName'),
+    ].join('\n');
+  }
+
   const head = [`// ${rule.title}`, `// ${rule.rule}`, ''];
 
   if (rule.ladder) {
@@ -323,12 +419,7 @@ function snippet(rule) {
 }
 
 /* ------------------------------------------------------------- Theme */
-const toggle = document.getElementById('theme-toggle');
-toggle.addEventListener('click', () => {
-  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-  document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
-  toggle.textContent = dark ? 'Dark' : 'Light';
-});
+wireThemeToggle(document.getElementById('theme-toggle'));
 
 function esc(s) {
   return String(s).replace(/[&<>"']/g, (c) => (

@@ -135,6 +135,103 @@ export const nameTruncation = {
   + 'On paper there is no hover to reveal the full name.',
   ],
 
+  // ------------------------------------------------- THE ALTERNATIVES
+  // Three ways to handle a name that does not fit. Two are in use, one is
+  // rejected — and it is kept here, switchable, rather than described in a
+  // sentence nobody can check.
+  //
+  // A rejected option that can still be run is worth more than a paragraph
+  // explaining why it was rejected: the reason becomes visible instead of
+  // arguable. It is also what an auditor asks for — not only what was
+  // decided, but what was considered.
+  strategies: {
+    trim: {
+      label: 'Trim at the end',
+      status: 'rejected',
+      short: 'Cut the name where the column ends and mark it with an ellipsis.',
+      why:
+        'Cheapest to implement and the reason this is worth showing: '
+      + '"Subramanian" becomes "Subrama…", which identifies nobody, and '
+      + '"Schmidt-Wollenweber" and "Schmidt-Wollner" collapse onto the same '
+      + 'stub. Worse than losing the name is that the result still looks like '
+      + 'a name — a reader has no way to tell a short name from a shortened '
+      + 'one.',
+      apply(name, availableWidth, measure) {
+        // Naive on purpose — one string, cut where it stops fitting. The
+        // original-script form is part of that string rather than something
+        // this strategy knows to drop first; not distinguishing between the
+        // parts of a name is precisely what makes it cheap and wrong.
+        const parts = [name.given.join(' '), name.family].filter(Boolean).join(' ');
+        const full = name.original ? `${parts} (${name.original})` : parts;
+        if (measure(full) <= availableWidth) {
+          return { step: 'full', line1: parts, line2: null, original: !!name.original };
+        }
+        let cut = full;
+        while (cut.length > 1 && measure(`${cut}…`) > availableWidth) cut = cut.slice(0, -1);
+        return { step: 'trimmed', line1: `${cut}…`, line2: null, original: false };
+      },
+    },
+
+    initials: {
+      label: 'Initial + family name',
+      status: 'chosen',
+      short: 'Abbreviate given names to initials; never touch the family name.',
+      why:
+        'An initial is read as an abbreviation, so the reader knows something '
+      + 'was left out and knows exactly what. "K. Schmidt-Wollenweber" can be '
+      + 'matched against a document; a trimmed name cannot. Stays on one '
+      + 'line, so the row height of the list is unaffected.',
+      apply(name, availableWidth, measure) {
+        const given = name.given ?? [];
+        const full = [given.join(' '), name.family].filter(Boolean).join(' ');
+        if (measure(name.original ? `${full} (${name.original})` : full) <= availableWidth) {
+          return { step: 'full', line1: full, line2: null, original: !!name.original };
+        }
+        if (measure(full) <= availableWidth) {
+          return { step: 'no-original', line1: full, line2: null, original: false };
+        }
+        const initials = given.map((g) => `${[...g][0]}.`).join(' ');
+        const short = [initials, name.family].filter(Boolean).join(' ');
+        if (measure(short) <= availableWidth) {
+          return { step: 'initials', line1: short, line2: null, original: false };
+        }
+        // Even the family name is too wide on its own. Nothing is cut.
+        return { step: 'wrap', line1: initials || null, line2: name.family, original: false };
+      },
+    },
+
+    wrap: {
+      label: 'More lines',
+      status: 'chosen — fallback',
+      short: 'Keep every name part and let the row grow taller.',
+      why:
+        'Costs no information at all, only vertical space — which is why it '
+      + 'beats any cut. It costs the row height of the whole list, though, '
+      + 'which is why an initial is tried first. In a dense list read at a '
+      + 'glance, uneven row heights are their own kind of noise.',
+      apply(name, availableWidth, measure) {
+        const given = name.given ?? [];
+        const full = [given.join(' '), name.family].filter(Boolean).join(' ');
+        if (measure(name.original ? `${full} (${name.original})` : full) <= availableWidth) {
+          return { step: 'full', line1: full, line2: null, original: !!name.original };
+        }
+        if (measure(full) <= availableWidth) {
+          return { step: 'no-original', line1: full, line2: null, original: false };
+        }
+        const givenFull = given.join(' ');
+        if (givenFull && measure(givenFull) <= availableWidth
+            && measure(name.family) <= availableWidth) {
+          return { step: 'two-line', line1: givenFull, line2: name.family, original: false };
+        }
+        return { step: 'wrap', line1: givenFull || null, line2: name.family, original: false };
+      },
+    },
+  },
+
+  // Which one is in force. The ladder above is the chosen combination:
+  // initials first, more lines as the fallback.
+  chosen: 'initials',
+
   // ------------------------------------------------------------- THE LOGIC
   // `measure` is injected: the rule knows the strategy, not how text is
   // measured. That keeps it usable outside a browser — in a test, in a

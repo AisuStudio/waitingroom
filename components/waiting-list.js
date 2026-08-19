@@ -29,8 +29,9 @@ function measure(text) {
   return ctx.measureText(text).width;
 }
 
-export function renderWaitingList(container, columnWidth) {
+export function renderWaitingList(container, columnWidth, strategyKey = rule.chosen) {
   container.replaceChildren();
+  const strategy = rule.strategies[strategyKey] ?? rule.strategies[rule.chosen];
 
   const probe = getComputedStyle(container);
   measureFont = `${probe.fontSize} ${probe.fontFamily}`;
@@ -50,7 +51,7 @@ export function renderWaitingList(container, columnWidth) {
   const used = new Map();
 
   rows.forEach((row) => {
-    const result = rule.apply(row.name, columnWidth, measure);
+    const result = strategy.apply(row.name, columnWidth, measure);
     used.set(result.step, (used.get(result.step) ?? 0) + 1);
 
     const tr = el('div', 'wr-list-row');
@@ -79,28 +80,38 @@ export function renderWaitingList(container, columnWidth) {
     table.append(tr);
   });
 
-  container.append(table, trace(used, columnWidth));
+  container.append(table, trace(used, columnWidth, strategy, strategyKey));
 }
 
 // Which rung of the ladder each row landed on. This is the whole point of
 // the control panel: drag the width down and watch the rows step down the
 // ladder one at a time, in the order the rule says they should.
-function trace(used, width) {
+function trace(used, width, strategy, key) {
   const box = el('div', 'wr-trace-block');
-  box.append(el('div', 'wr-trace-title', `Column ${width}px — which rung each row landed on`));
+  if (strategy.status === 'rejected') box.classList.add('wr-trace-block-rejected');
 
-  rule.ladder.forEach((rung) => {
-    const n = used.get(rung.step) ?? 0;
+  box.append(el('div', 'wr-trace-title',
+    `${strategy.label} · column ${width}px — where each row landed`));
+
+  // Only the steps this strategy can actually produce, so the list does not
+  // imply rungs that are not part of it.
+  const steps = [...new Set([...used.keys()])];
+  const ordered = rule.ladder.map((r) => r.step).filter((s) => steps.includes(s));
+  const extra = steps.filter((s) => !ordered.includes(s));
+
+  [...ordered, ...extra].forEach((step) => {
+    const n = used.get(step) ?? 0;
     const line = el('div', 'wr-trace-line');
-    if (n === 0) line.classList.add('wr-trace-line-off');
-    line.append(
-      el('code', null, rung.step),
-      el('span', null, ` — ${n} ${n === 1 ? 'row' : 'rows'}`),
-    );
+    line.append(el('code', null, step), el('span', null, ` — ${n} ${n === 1 ? 'row' : 'rows'}`));
     box.append(line);
   });
 
-  if ((used.get('wrap') ?? 0) > 0) {
+  if (strategy.status === 'rejected') {
+    const warn = el('div', 'wr-trace-kept');
+    warn.textContent = 'This option was rejected — see the Rules tab for why. '
+                     + 'It is here to be tried, not to be used.';
+    box.append(warn);
+  } else if ((used.get('wrap') ?? 0) > 0) {
     const warn = el('div', 'wr-trace-kept');
     warn.textContent = 'Some family names are wider than the column on their own. '
                      + 'They wrap and the row grows — nothing is cut and nothing '

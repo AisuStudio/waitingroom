@@ -439,3 +439,84 @@ body {
   .wr-child-pair { grid-template-columns: 1fr; }
   .wr-input-date { width: 100%; }
 }
+
+/* ============================================================================
+   The flow page
+   ========================================================================= */
+
+.wr-flow { list-style: none; margin: 32px 0 48px; padding: 0; }
+
+.wr-step {
+  position: relative;
+  padding: 0 0 24px 44px;
+  border-left: 2px solid var(--border);
+  margin-left: 13px;
+}
+.wr-step:last-child { border-left-color: transparent; padding-bottom: 0; }
+
+.wr-step-num {
+  position: absolute; left: -14px; top: 0;
+  width: 26px; height: 26px; border-radius: 999px;
+  background: var(--surface); border: 2px solid var(--border);
+  color: var(--text-muted);
+  font-size: 12px; font-weight: 700;
+  display: grid; place-items: center;
+}
+
+/* The step this page is served from. Marked so the reader can place
+   themselves in the process rather than having to work it out. */
+.wr-step-here > .wr-step-head .wr-step-num {
+  background: var(--accent-solid); border-color: var(--accent-solid); color: #fff;
+}
+.wr-step-here { border-left-color: var(--accent-border); }
+
+.wr-step-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.wr-step-head h2 { font-size: 16px; margin: 0; }
+.wr-step p { margin: 0 0 8px; max-width: 68ch; }
+.wr-step-note {
+  color: var(--text-muted); font-size: 13px;
+  border-left: 2px solid var(--border); padding-left: 12px;
+}
+.wr-question {
+  font-size: 16px; font-weight: 600;
+  background: var(--accent-bg); border: 1px solid var(--accent-border);
+  border-radius: 8px; padding: 12px 14px; color: var(--text);
+}
+
+/* Status is stated everywhere, because a process diagram that does not
+   distinguish what runs from what is intended reads as a promise. */
+.wr-status {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+  border-radius: 999px; padding: 3px 9px; white-space: nowrap;
+  border: 1px solid var(--border); color: var(--text-muted);
+}
+.wr-status-built   { border-color: var(--accent-border); color: var(--accent-text); background: var(--accent-bg); }
+.wr-status-planned { border-style: dashed; }
+.wr-status-manual  { border-style: dashed; }
+.wr-status-next    { border-color: var(--border-strong); }
+.wr-status-theirs  { opacity: .8; }
+
+.wr-payoff { margin: 0; padding-left: 20px; }
+.wr-payoff li { margin-bottom: 10px; max-width: 70ch; }
+
+/* The link back sits where the theme toggle does on the other page. */
+a.wr-theme-toggle { text-decoration: none; display: inline-block; }
+.wr-topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+/* ---- Strategy choice in the control panel ---- */
+.wr-choice { display: flex; gap: 14px; flex-wrap: wrap; }
+.wr-choice-item { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+.wr-choice-item input { accent-color: var(--accent-solid); }
+.wr-choice-rejected span:first-of-type { color: var(--text-muted); }
+.wr-choice-tag {
+  font-size: 9px; text-transform: uppercase; letter-spacing: .06em;
+  border: 1px dashed var(--border-strong); border-radius: 999px;
+  padding: 1px 6px; color: var(--text-muted);
+}
+.wr-trace-block-rejected {
+  background: var(--surface-sunk);
+  border-color: var(--border-strong);
+  color: var(--text-muted);
+}
+.wr-edge-rejected dt { color: var(--text-muted); }
+.wr-edge dt .wr-status { margin-left: 6px; vertical-align: middle; }

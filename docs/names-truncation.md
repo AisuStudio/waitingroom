@@ -53,6 +53,30 @@ recorded so they can be answered rather than quietly assumed.
 - At what column width does the two-line form stop being acceptable and the column has to be widened instead?
 - Is a shortened name ever printed on a document, or only shown on screen? On paper there is no hover to reveal the full name.
 
+## Options considered
+
+All three are selectable in the prototype's control panel, including the
+rejected one — a reason that can be run is worth more than one that has to be
+believed.
+
+### Trim at the end — rejected
+
+Cut the name where the column ends and mark it with an ellipsis.
+
+Cheapest to implement and the reason this is worth showing: "Subramanian" becomes "Subrama…", which identifies nobody, and "Schmidt-Wollenweber" and "Schmidt-Wollner" collapse onto the same stub. Worse than losing the name is that the result still looks like a name — a reader has no way to tell a short name from a shortened one.
+
+### Initial + family name — chosen
+
+Abbreviate given names to initials; never touch the family name.
+
+An initial is read as an abbreviation, so the reader knows something was left out and knows exactly what. "K. Schmidt-Wollenweber" can be matched against a document; a trimmed name cannot. Stays on one line, so the row height of the list is unaffected.
+
+### More lines — chosen — fallback
+
+Keep every name part and let the row grow taller.
+
+Costs no information at all, only vertical space — which is why it beats any cut. It costs the row height of the whole list, though, which is why an initial is tried first. In a dense list read at a glance, uneven row heights are their own kind of noise.
+
 ## The ladder
 
 Tried in order; the first rung that fits wins.
