@@ -122,6 +122,7 @@ export const nameTruncation = {
     {
       date: '2026-08-19',
       change: 'Rule created — ladder of sacrifices, family name out of bounds',
+      class: 'structure',
       by: 'Example — the deciding person would be named here',
       basis: 'Synthetic example, tested against names from several naming systems',
     },
@@ -130,6 +131,7 @@ export const nameTruncation = {
       change: 'Truncation at the end removed from the ladder entirely; '
             + 'initials-plus-wrap added as a rung; the last rung now wraps '
             + 'instead of scrolling behind a fade',
+      class: 'rule',
       by: 'Found while working the prototype',
       basis: 'The implementation faded the overflowing cell, which looks '
            + 'exactly like the cut-off name the rule forbids. An initial is '
@@ -139,6 +141,7 @@ export const nameTruncation = {
       date: '2026-08-19',
       change: 'Fourth option added: initial plus reveal on hover and focus, '
             + 'marked conditional rather than chosen',
+      class: 'record',
       by: 'Proposed while working the prototype',
       basis: 'A reveal removes the last doubt at no layout cost, but only '
            + 'where there is a pointer. Recorded with the conditions rather '

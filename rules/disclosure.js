@@ -160,6 +160,7 @@ export const conditionalDisclosure = {
     {
       date: '2026-08-19',
       change: 'Rule created — reveal conditions and retention on withdrawal',
+      class: 'structure',
       by: 'Example — the deciding person would be named here',
       basis: 'Synthetic example, created to test this format on a nested case',
     },
@@ -167,6 +168,7 @@ export const conditionalDisclosure = {
       date: '2026-08-19',
       change: 'Free text added after "other"; child name and date of birth '
             + 'split into two fields',
+      class: 'structure',
       by: 'Found while working the prototype',
       basis: 'Both gaps surfaced by using the form, not by reading the spec — '
            + 'which is the argument for the prototype existing at all',

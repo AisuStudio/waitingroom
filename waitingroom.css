@@ -901,6 +901,45 @@ body {
 .wr-flow-page .wr-cond th:last-child,
 .wr-flow-page .wr-cond td:last-child  { width: 1%; white-space: nowrap; }
 
+/* ---- The change trail ----
+   Class chips are told apart by border and fill, like the status chips — the
+   label itself always carries the text colour. */
+.wr-class {
+  font-size: var(--t-micro); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .06em;
+  border-radius: 999px; padding: 3px 9px; white-space: nowrap;
+  border: 1px solid var(--border-strong); color: var(--text);
+}
+.wr-class-token     { border-style: dashed; }
+.wr-class-rule      { border-color: var(--accent-border); background: var(--accent-bg); color: var(--blue-12); }
+.wr-class-structure { border-color: var(--text); }
+.wr-class-record    { background: var(--surface-sunk); }
+
+.wr-classes { margin-bottom: 34px; }
+/* The flow page's column plan is for the artefact table (wide name column,
+   one-chip status column). This table is the other way round — chip first,
+   prose last — so both inherited widths are overridden. */
+.wr-flow-page .wr-classes th:first-child,
+.wr-flow-page .wr-classes td:first-child { width: 1%; white-space: nowrap; }
+.wr-flow-page .wr-classes th:nth-child(2),
+.wr-flow-page .wr-classes td:nth-child(2) { width: 34%; }
+.wr-flow-page .wr-classes th:last-child,
+.wr-flow-page .wr-classes td:last-child { width: auto; white-space: normal; }
+
+.wr-trail-date {
+  font-size: var(--t-micro); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text-muted);
+  margin: 26px 0 0; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-strong);
+}
+.wr-trail-entry { padding: 14px 0 4px; border-bottom: 1px solid var(--border); }
+.wr-trail-entry:last-child { border-bottom: 0; }
+.wr-trail-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.wr-trail-head strong { font-size: var(--t-read); }
+.wr-trail-change { margin: 8px 0 6px; max-width: 62ch; font-size: var(--t-read); line-height: 1.55; }
+.wr-trail-meta { margin: 0 0 10px; max-width: 70ch; color: var(--text-muted); font-size: var(--t-body); line-height: 1.5; }
+
 /* ---- Signature ---- */
 .wr-signature {
   margin-top: 40px; padding-top: 16px;

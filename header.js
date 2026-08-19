@@ -10,8 +10,9 @@
 // set in two lines, then the navigation over a second rule.
 
 const PAGES = [
-  { file: 'index.html', label: 'Components' },
-  { file: 'flow.html',  label: 'Workflow' },
+  { file: 'index.html',     label: 'Components' },
+  { file: 'flow.html',      label: 'Workflow' },
+  { file: 'changelog.html', label: 'Changes' },
 ];
 
 // Two lines, because the break is part of the design: one line states what

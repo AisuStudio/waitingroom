@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>waitingroom — the change trail</title>
+<link rel="stylesheet" href="waitingroom.css">
+</head>
+<body class="wr-flow-page">
+<div class="wr-page">
+
+  <header id="site-header"></header>
+
+  <main class="wr-canvas">
+
+    <h2 class="wr-page-heading">The change trail</h2>
+    <p class="wr-page-lead">
+      Every provenance entry from every rule, newest first. It answers one question —
+      <strong>do I have to act?</strong> — which is why each entry carries a class, not
+      just a diff.
+    </p>
+
+    <table class="wr-cond wr-classes">
+      <thead><tr><th>Class</th><th>Means</th><th>Who has to act</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="wr-class wr-class-token">token</span></td>
+          <td>A colour, a spacing — the value behind a variable.</td>
+          <td><strong>Nobody.</strong> Components follow the variable. If this class
+              still costs a review round, the tokens are being maintained twice.</td>
+        </tr>
+        <tr>
+          <td><span class="wr-class wr-class-rule">rule</span></td>
+          <td>A threshold, a condition, a rung of a ladder.</td>
+          <td>Engineering — the implementation is affected, and the entry here is the
+              audit trail for why.</td>
+        </tr>
+        <tr>
+          <td><span class="wr-class wr-class-structure">structure</span></td>
+          <td>A field added or removed, a rule created.</td>
+          <td>Everyone — this is the full round, and the only class that should
+              cost one.</td>
+        </tr>
+        <tr>
+          <td><span class="wr-class wr-class-record">record</span></td>
+          <td>Something written down that was already true, or noted as conditional.</td>
+          <td>Nobody yet — it exists so the next decision does not start from zero.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div id="trail"></div>
+
+    <p class="wr-foot">
+      This page is assembled from the <code>provenance</code> lists in
+      <code>rules/*.js</code> — it has no content of its own and cannot disagree with
+      them. Git answers what changed in the files; this answers what changed in the
+      decisions.
+    </p>
+
+  </main>
+
+  <p class="wr-signature">
+    <strong>Handover concept</strong>
+    <span>·</span>
+    <span>A working sketch of how behaviour rules travel from specification to
+    implementation. Synthetic examples throughout.</span>
+    <span>·</span>
+    <span>Dominik Heilig — <a href="https://aisu.studio" target="_blank" rel="noopener noreferrer">aisu.studio</a>, 2026</span>
+  </p>
+
+</div>
+
+<script type="module">
+import { selectionControl } from './rules/selection.js';
+import { conditionalDisclosure } from './rules/disclosure.js';
+import { nameTruncation } from './rules/names.js';
+import { applyStoredTheme, wireModeControl } from './theme.js';
+import { renderHeader } from './header.js';
+
+applyStoredTheme();
+renderHeader(document.getElementById('site-header'));
+wireModeControl(document.querySelector('.wr-mode'));
+
+const RULES = [selectionControl, conditionalDisclosure, nameTruncation];
+
+const el = (tag, cls, text) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+};
+
+/* Flattened, then sorted newest first — the question "what changed lately"
+   is asked across rules, not per rule. Within a day, source order stands in
+   for time of day, so later entries of the same rule stay later. */
+const entries = RULES.flatMap((rule) =>
+  rule.provenance.map((p, i) => ({ rule, p, i }))
+).sort((a, b) => b.p.date.localeCompare(a.p.date) || b.i - a.i);
+
+const trail = document.getElementById('trail');
+let lastDate = null;
+
+for (const { rule, p } of entries) {
+  if (p.date !== lastDate) {
+    trail.append(el('h3', 'wr-trail-date', p.date));
+    lastDate = p.date;
+  }
+  const row = el('article', 'wr-trail-entry');
+
+  const head = el('div', 'wr-trail-head');
+  head.append(
+    el('span', `wr-class wr-class-${p.class}`, p.class),
+    el('strong', null, rule.title),
+  );
+  row.append(head);
+
+  row.append(el('p', 'wr-trail-change', p.change));
+  row.append(el('p', 'wr-trail-meta', `${p.by} · ${p.basis}`));
+  trail.append(row);
+}
+</script>
+</body>
+</html>

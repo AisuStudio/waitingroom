@@ -75,6 +75,7 @@ export const selectionControl = {
     {
       date: '2026-08-19',
       change: 'Rule created, threshold 5',
+      class: 'structure',
       by: 'Example — the deciding person would be named here',
       basis: 'Synthetic example, created to test this format',
     },
