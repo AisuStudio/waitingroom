@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>waitingroom</title>
+<link rel="stylesheet" href="waitingroom.css">
+</head>
+<body>
+<div class="wr-page">
+
+  <div class="wr-topbar">
+    <div>
+      <h1 class="wr-title">waitingroom</h1>
+      <p class="wr-subtitle">
+        A holding room for behaviour rules. Not production code — the place where a
+        rule becomes executable before it gets built.
+      </p>
+    </div>
+    <button class="wr-theme-toggle" id="theme-toggle" type="button">Dark</button>
+  </div>
+
+  <div class="wr-level">
+    <button class="wr-level-chip" aria-current="false" type="button">Building blocks</button>
+    <button class="wr-level-chip" aria-current="true" type="button">Assemblies</button>
+  </div>
+
+  <h2 class="wr-component-name">Purpose selection</h2>
+
+  <div class="wr-tabbar" role="tablist">
+    <button class="wr-tab" role="tab" aria-selected="true"  data-panel="component">Component</button>
+    <button class="wr-tab" role="tab" aria-selected="false" data-panel="rules">Rules</button>
+    <button class="wr-tab" role="tab" aria-selected="false" data-panel="code">Code</button>
+    <span class="wr-links">
+      <a class="wr-ext-link" id="link-spec"  href="#">Spec&nbsp;↗</a>
+      <a class="wr-ext-link" id="link-figma" href="#">Figma&nbsp;↗</a>
+    </span>
+  </div>
+
+  <!-- ------------------------------------------------------- COMPONENT -->
+  <section class="wr-panel" id="panel-component" role="tabpanel">
+    <div class="wr-console">
+      <p class="wr-console-title">Control panel</p>
+      <div class="wr-control">
+        <label for="count">Number of options</label>
+        <input type="range" id="count" min="0" max="12" value="3" step="1">
+        <output id="count-out">3</output>
+      </div>
+    </div>
+    <div class="wr-stage" id="stage"></div>
+  </section>
+
+  <!-- ----------------------------------------------------------- RULES -->
+  <section class="wr-panel" id="panel-rules" role="tabpanel" hidden></section>
+
+  <!-- ------------------------------------------------------------ CODE -->
+  <section class="wr-panel" id="panel-code" role="tabpanel" hidden></section>
+
+  <p class="wr-foot">
+    All three views come from a single file — <code>rules/selection.js</code>. Change
+    the threshold there and the prototype, the rule text and the code change together.
+    There is no second place to keep in sync. Sample data is synthetic (a citizen
+    registration office) with no connection to any real case.
+  </p>
+
+</div>
+
+<script type="module">
+import { selectionControl as rule } from './rules/selection.js';
+import { serviceList, MAX_SERVICES } from './components/data.js';
+import { renderSelectionField } from './components/selection-field.js';
+
+/* Where this component comes from. Two links, because the two sources answer
+   different questions: the spec says what it is for, Figma says what it looks
+   like. Neither of them states the behaviour — that is what this page adds. */
+const SOURCES = {
+  spec:  { href: '#', title: 'Specification — placeholder until linked' },
+  figma: { href: '#', title: 'Figma component — placeholder until linked' },
+};
+
+/* ---------------------------------------------------------------- Tabs */
+const tabs = [...document.querySelectorAll('.wr-tab')];
+const panels = {
+  component: document.getElementById('panel-component'),
+  rules: document.getElementById('panel-rules'),
+  code: document.getElementById('panel-code'),
+};
+tabs.forEach((tab) => {
+  tab.addEventListener('click', () => {
+    tabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+    Object.entries(panels).forEach(([key, el]) => { el.hidden = key !== tab.dataset.panel; });
+  });
+});
+
+for (const [key, src] of Object.entries(SOURCES)) {
+  const a = document.getElementById(`link-${key}`);
+  a.href = src.href;
+  a.title = src.title;
+  if (src.href === '#') a.classList.add('wr-ext-link-empty');
+}
+
+/* ------------------------------------------------------- COMPONENT tab */
+const slider = document.getElementById('count');
+const out = document.getElementById('count-out');
+const stage = document.getElementById('stage');
+slider.max = String(MAX_SERVICES);
+
+function draw() {
+  const n = Number(slider.value);
+  out.textContent = n;
+  renderSelectionField(stage, serviceList(n));
+}
+slider.addEventListener('input', draw);
+draw();
+
+/* ----------------------------------------------------------- RULES tab */
+// Rendered from the rule's own metadata, not from a second copy of it.
+panels.rules.innerHTML = `
+  <h3 class="wr-rule-head">${esc(rule.title)}</h3>
+  <p class="wr-rule-statement">${esc(rule.rule)}</p>
+
+  <div class="wr-rule-section">
+    <h4>Rationale</h4>
+    <p>${esc(rule.rationale)}</p>
+  </div>
+
+  <div class="wr-rule-section">
+    <h4>Edge cases</h4>
+    <dl>
+      ${rule.edgeCases.map((e) => `
+        <div class="wr-edge">
+          <dt>${esc(e.case)}</dt>
+          <dd>${esc(e.handling)}</dd>
+        </div>`).join('')}
+    </dl>
+  </div>
+
+  <div class="wr-rule-section">
+    <h4>Open — asked, not invented</h4>
+    <ul class="wr-open">
+      ${rule.openQuestions.map((q) => `<li>${esc(q)}</li>`).join('')}
+    </ul>
+  </div>
+
+  <div class="wr-rule-section">
+    <h4>Provenance</h4>
+    <ul class="wr-prov">
+      ${rule.provenance.map((p) => `
+        <li><strong>${esc(p.date)}</strong> — ${esc(p.change)} · ${esc(p.by)} · ${esc(p.basis)}</li>`).join('')}
+    </ul>
+  </div>
+`;
+
+/* ------------------------------------------------------------ CODE tab */
+// Shows literally the function the prototype above executes.
+// Not a retelling of it — the same one.
+panels.code.innerHTML = `
+  <p class="wr-code-note">
+    Deliberately framework-free: the decision, not the rendering. It should still hold
+    when the component library moves a major version. This is the same function the
+    prototype runs in the Component tab.
+  </p>
+  <pre class="wr-code"><code>${esc(snippet())}</code></pre>
+`;
+
+function snippet() {
+  return [
+    `// ${rule.title}`,
+    `// ${rule.rule}`,
+    ``,
+    `const THRESHOLD = ${rule.threshold};`,
+    ``,
+    rule.apply.toString()
+      .replace(/^apply/, 'function controlType')
+      .replace(/this\.threshold/g, 'THRESHOLD'),
+  ].join('\n');
+}
+
+/* ------------------------------------------------------------- Theme */
+const toggle = document.getElementById('theme-toggle');
+toggle.addEventListener('click', () => {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+  toggle.textContent = dark ? 'Dark' : 'Light';
+});
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (c) => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+</script>
+</body>
+</html>
