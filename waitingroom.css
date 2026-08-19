@@ -42,6 +42,12 @@
   --blue-10: #0588f0;
   --blue-11: #0d74ce;
   --blue-12: #113264;
+
+  /* One step darker than blue-11. Radix guarantees step 11 as readable text on
+     steps 1–2; the masthead sits on step 6, where 11 measures 3.4:1 against a
+     4.5:1 requirement. The light scale has no step between 11 and 12, so this
+     is a documented departure from it rather than a value out of it. */
+  --blue-11-deep: #0b5cad;
 }
 
 :root {
@@ -86,7 +92,8 @@
 
   --trace-bg:           var(--accent-bg);
   --trace-border:       var(--accent-border);
-  --trace-text:         var(--accent-text);
+  /* Step 12, not 11: the trace sits on blue-3, where 11 lands at 4.25:1. */
+  --trace-text:         var(--blue-12);
 
   --panel-bg:           var(--surface);
   --panel-border:       var(--border);
@@ -115,6 +122,9 @@
   --blue-4:  #003362;  --blue-5:  #004074;  --blue-6:  #104d87;
   --blue-7:  #205d9e;  --blue-8:  #2870bd;  --blue-9:  #0090ff;
   --blue-10: #3b9eff;  --blue-11: #70b8ff;  --blue-12: #c2e6ff;
+
+  /* No departure needed here: on a dark ground step 11 already clears 7:1. */
+  --blue-11-deep: var(--blue-11);
 }
 
 /* ============================================================================
@@ -122,6 +132,15 @@
    ========================================================================= */
 
 * { box-sizing: border-box; }
+
+/* One focus ring for everything the keyboard reaches. The browser default is
+   drawn in its own colour, which has to work on a grey ground, a white sheet
+   and a near-black code block at once — and does not. This one is drawn in the
+   link blue, which is repointed per mode and clears 4.5:1 on both grounds. */
+:focus-visible {
+  outline: 2px solid var(--blue-11-deep);
+  outline-offset: 2px;
+}
 
 body {
   margin: 0;
@@ -153,7 +172,10 @@ body {
    ========================================================================= */
 
 :root {
-  --head-blue-link: #0075ff;   /* frame: Workflow */
+  /* The frame's link blue is #0075ff. On the grey ground it measures 3.0:1,
+     and it does not reach 4.5:1 on any of the light greys — it is a fill
+     colour, not a text colour. Same hue, one step darker. */
+  --head-blue-link: var(--blue-11-deep);
   --head-blue-fill: #0069e5;   /* frame: the pill that is not the current mode */
 }
 
@@ -173,7 +195,9 @@ body {
 
 /* Outside the sheet, on the ground — it signs the work rather than being part
    of it. */
-.wr-page > .wr-signature { margin: 26px 0 0; padding-top: 14px; border-top-color: var(--border-strong); }
+/* On the ground, not on the sheet: --text-muted measures 4.23:1 there. The
+   colophon is short enough to carry the full text colour. */
+.wr-page > .wr-signature { color: var(--text); margin: 26px 0 0; padding-top: 14px; border-top-color: var(--border-strong); }
 
 /* Not a flex row: wordmark and pills sit in one line box, so the pills can be
    aligned to the wordmark's baseline rather than to the top of its line. */
@@ -483,18 +507,21 @@ body {
 .wr-copy {
   position: absolute; top: 10px; right: 10px; z-index: 1;
   display: inline-flex; align-items: center; gap: 6px;
-  border: 1px solid color-mix(in srgb, var(--code-text) 28%, transparent);
+  /* Percentages chosen so the outline clears 3:1 against the block behind it.
+     An opacity step used to sit on top of this and quietly undid it — the
+     measurement is of the computed colour, the eye sees what opacity leaves. */
+  border: 1px solid color-mix(in srgb, var(--code-text) 55%, transparent);
   border-radius: 6px;
-  background: color-mix(in srgb, var(--code-text) 10%, transparent);
+  background: color-mix(in srgb, var(--code-text) 16%, transparent);
   color: var(--code-text);
   font: inherit; font-size: 11px; font-weight: 600;
   padding: 5px 9px; cursor: pointer;
-  opacity: .75;
 }
 .wr-copy svg { width: 13px; height: 13px; }
-.wr-copy:hover { opacity: 1; }
-.wr-copy:focus-visible { opacity: 1; outline: 2px solid var(--accent-solid); outline-offset: 2px; }
-.wr-copy-done { opacity: 1; border-color: var(--accent-solid); color: #fff; }
+.wr-copy:hover { background: color-mix(in srgb, var(--code-text) 26%, transparent); }
+/* The code block is inverted relative to the page, so the ring on it is too. */
+.wr-copy:focus-visible { outline-color: var(--code-text); }
+.wr-copy-done { border-color: var(--accent-solid); }
 /* The snippet's first line must not run under the button. */
 .wr-code-wrap .wr-code { padding-right: 92px; }
 
@@ -563,17 +590,20 @@ body {
 }
 
 /* ---- Trace block for the conditional rule ---- */
+/* Reaches for the component tokens, not the semantic ones underneath them.
+   It had been using --accent-text directly, which is how it kept the 4.25:1
+   the token layer was already set up to avoid. */
 .wr-trace-block {
   margin-top: 20px; padding: 12px 14px;
-  background: var(--accent-bg); border: 1px solid var(--accent-border);
-  border-radius: 8px; font-size: 12px; color: var(--accent-text);
+  background: var(--trace-bg); border: 1px solid var(--trace-border);
+  border-radius: 8px; font-size: 12px; color: var(--trace-text);
 }
 .wr-trace-title { font-weight: 700; margin-bottom: 6px; }
 .wr-trace-line { margin-bottom: 3px; }
 .wr-trace-line code { font-size: 11.5px; }
 .wr-trace-kept {
   margin-top: 8px; padding-top: 8px;
-  border-top: 1px solid var(--accent-border); font-style: italic;
+  border-top: 1px solid var(--trace-border); font-style: italic;
 }
 
 /* ---- Conditions table in the Rules tab ---- */
@@ -812,7 +842,7 @@ body {
   display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline;
 }
 .wr-signature strong { color: var(--text); font-weight: 600; }
-.wr-signature a { color: var(--accent-text); text-decoration: none; }
+.wr-signature a { color: var(--blue-11-deep); text-decoration: none; }
 .wr-signature a:hover { text-decoration: underline; }
 
 /* ---- Regulatory note ----
