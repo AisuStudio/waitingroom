@@ -433,6 +433,28 @@ body {
 }
 .wr-code-note { color: var(--text-muted); font-size: 12px; margin: 0 0 10px; max-width: 68ch; }
 
+/* ---- Copy ----
+   Inside the block rather than above it, so it stays attached to the thing it
+   copies when the snippet scrolls sideways. */
+.wr-code-wrap { position: relative; }
+.wr-copy {
+  position: absolute; top: 10px; right: 10px; z-index: 1;
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid color-mix(in srgb, var(--code-text) 28%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--code-text) 10%, transparent);
+  color: var(--code-text);
+  font: inherit; font-size: 11px; font-weight: 600;
+  padding: 5px 9px; cursor: pointer;
+  opacity: .75;
+}
+.wr-copy svg { width: 13px; height: 13px; }
+.wr-copy:hover { opacity: 1; }
+.wr-copy:focus-visible { opacity: 1; outline: 2px solid var(--accent-solid); outline-offset: 2px; }
+.wr-copy-done { opacity: 1; border-color: var(--accent-solid); color: #fff; }
+/* The snippet's first line must not run under the button. */
+.wr-code-wrap .wr-code { padding-right: 92px; }
+
 .wr-foot {
   margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border);
   color: var(--text-muted); font-size: 12px; max-width: 70ch;

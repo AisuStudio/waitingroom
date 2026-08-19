@@ -427,9 +427,71 @@ function codeMarkup(rule, state = {}) {
       + 'hold when the component library moves a major version. This is the same logic '
       + 'the prototype runs in the Component tab.';
 
+  // Lucide `copy` and `check`, inlined rather than linked: the page has no
+  // build step and should keep working without a network.
+  const COPY = '<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>'
+             + '<path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>';
+
   return `
     <p class="wr-code-note">${note}</p>
-    <pre class="wr-code"><code>${esc(snippet(rule, state))}</code></pre>`;
+    <div class="wr-code-wrap">
+      <button class="wr-copy" type="button" data-copy aria-label="Copy this snippet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+             focusable="false">${COPY}</svg>
+        <span>Copy</span>
+      </button>
+      <pre class="wr-code"><code>${esc(snippet(rule, state))}</code></pre>
+    </div>`;
+}
+
+/* One delegated listener rather than one per button: the code panel is
+   re-rendered on every control change, so anything bound to a button would be
+   bound to a button that no longer exists. */
+const CHECK = '<path d="M20 6 9 17l-5-5"/>';
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest?.('[data-copy]');
+  if (!btn) return;
+  const text = btn.parentElement.querySelector('code').textContent;
+  const svg = btn.querySelector('svg');
+  const label = btn.querySelector('span');
+  const restore = { svg: svg.innerHTML, label: label.textContent };
+
+  const done = (ok) => {
+    svg.innerHTML = ok ? CHECK : restore.svg;
+    label.textContent = ok ? 'Copied' : 'Press ⌘C';
+    btn.classList.toggle('wr-copy-done', ok);
+    setTimeout(() => {
+      svg.innerHTML = restore.svg;
+      label.textContent = restore.label;
+      btn.classList.remove('wr-copy-done');
+    }, 1600);
+  };
+
+  try {
+    await navigator.clipboard.writeText(text);
+    done(true);
+  } catch {
+    // No clipboard permission, or the page was opened over file://. Select the
+    // snippet instead, so the keyboard shortcut still works.
+    const range = document.createRange();
+    range.selectNodeContents(btn.parentElement.querySelector('code'));
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    done(false);
+  }
+});
+
+// Object methods stringify with the indentation they had in their source file,
+// so the body arrives shifted relative to the first line. Dedented here to the
+// shallowest body line, because a snippet that cannot be copied cleanly is a
+// picture of code rather than code.
+function fn(source, name) {
+  const lines = source.replace(/^apply/, `function ${name}`).split('\n');
+  const body = lines.slice(1).filter((l) => l.trim());
+  const pad = body.length ? Math.min(...body.map((l) => l.match(/^ */)[0].length)) : 0;
+  return [lines[0], ...lines.slice(1).map((l) => l.slice(pad))].join('\n');
 }
 
 function snippet(rule, state = {}) {
@@ -441,7 +503,7 @@ function snippet(rule, state = {}) {
       `// ${strategy.label}${strategy.status === 'rejected' ? '  — REJECTED' : ''}`,
       `// ${strategy.short}`,
       '',
-      strategy.apply.toString().replace(/^apply/, 'function fitName'),
+      fn(strategy.apply.toString(), 'fitName'),
     ].join('\n');
   }
 
@@ -454,26 +516,30 @@ function snippet(rule, state = {}) {
       ...rule.ladder.map((r) => `  '${r.step}',`),
       '];',
       '',
-      '// Try each rung in order; the first that fits wins.',
-      '// `measure` is injected — the rule knows the strategy, not how text',
-      '// is measured, so the same decision is reproducible outside a browser.',
-      'function fitName(name, availableWidth, measure) { /* see rules/names.js */ }',
-      '',
-      '// The family name is never shortened. If nothing fits, the column',
-      '// overflows instead.',
+      '// Try each rung in order; the first that fits wins. `measure` is injected',
+      '// — the rule knows the strategy, not how text is measured, so the same',
+      '// decision is reproducible outside a browser.',
+      '// The family name is never shortened; if nothing fits, the column grows.',
     ].join('\n');
   }
 
+  // The conditions carry their own tests, and those are what gets handed over.
+  // Printing only the prose `when` would have been a description of the rule,
+  // not the rule — and the snippet claims to be the second thing.
   if (rule.conditions) {
     return [
       ...head,
       'const CONDITIONS = [',
-      ...rule.conditions.map((c) => `  { field: '${c.field}', when: "${c.when}" },`),
+      ...rule.conditions.map((c) => [
+        '  {',
+        `    field: '${c.field}',`,
+        `    when:  "${c.when}",`,
+        `    test:  ${c.test.toString()},`,
+        '  },',
+      ].join('\n')),
       '];',
       '',
-      'function visibleFields(answers) {',
-      '  return CONDITIONS.filter((c) => c.test(answers)).map((c) => c.field);',
-      '}',
+      fn(rule.apply.toString(), 'visibleFields').replace(/this\.conditions/g, 'CONDITIONS'),
       '',
       '// Withdrawing a field does not clear what it held — see edge cases.',
     ].join('\n');
@@ -483,9 +549,7 @@ function snippet(rule, state = {}) {
     ...head,
     `const THRESHOLD = ${rule.threshold};`,
     '',
-    rule.apply.toString()
-      .replace(/^apply/, 'function controlType')
-      .replace(/this\.threshold/g, 'THRESHOLD'),
+    fn(rule.apply.toString(), 'controlType').replace(/this\.threshold/g, 'THRESHOLD'),
   ].join('\n');
 }
 
