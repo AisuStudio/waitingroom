@@ -195,6 +195,24 @@ export const conditionalDisclosure = {
   // ------------------------------------------------------------- THE LOGIC
   // Returns the visible fields for a set of answers. Derived from the
   // declarations above — adding a condition there needs no change here.
+  // ------------------------------------------------------------- CONTRACT
+  // What the engineer actually receives. The snippet below is a decision
+  // function, not a component: it says which control applies, never how it is
+  // drawn. This block is the part that makes it usable in a stack that has
+  // nothing to do with this page.
+  contract: {
+    input: 'answers: Record<field, value> — everything answered so far',
+    returns: 'string[] — the field keys to show, on top of the base fields',
+    wiring: [
+      ['a key in the list', 'Render that field, directly after the answer it follows from.'],
+      ['a key no longer in the list', 'Stop rendering it — but keep what it held. '
+        + 'Withdrawing a field is not a request to delete the answer.'],
+      ['baseFields', 'Always rendered, in their fixed order, whatever the answers are.'],
+    ],
+    note: 'Call it after every answer. The order the fields are rendered in belongs '
+        + 'to the form, not to this function.',
+  },
+
   apply(answers) {
     return this.conditions.filter((c) => c.test(answers)).map((c) => c.field);
   },

@@ -415,6 +415,31 @@ function rulesMarkup(rule) {
     </div>`;
 }
 
+/* The contract, not the code, is the thing being handed over. The snippet is a
+   decision function — it says which control applies and never how it is drawn,
+   so the only way it is usable in Angular, or in anything else, is if what goes
+   in and what comes out is stated. This block states it. */
+function contractMarkup(rule) {
+  const c = rule.contract;
+  if (!c) return '';
+  return `
+    <div class="wr-contract">
+      <p class="wr-contract-title">What you get</p>
+      <dl class="wr-contract-io">
+        <div><dt>Takes</dt><dd><code>${esc(c.input)}</code></dd></div>
+        <div><dt>Returns</dt><dd><code>${esc(c.returns)}</code></dd></div>
+      </dl>
+      <table class="wr-contract-wire">
+        <thead><tr><th>You get</th><th>You render</th></tr></thead>
+        <tbody>
+          ${c.wiring.map(([v, what]) => `
+            <tr><td><code>${esc(v)}</code></td><td>${esc(what)}</td></tr>`).join('')}
+        </tbody>
+      </table>
+      ${c.note ? `<p class="wr-contract-note">${esc(c.note)}</p>` : ''}
+    </div>`;
+}
+
 function codeMarkup(rule, state = {}) {
   const strategy = rule.strategies?.[state.strategy];
   const note = strategy
@@ -423,9 +448,9 @@ function codeMarkup(rule, state = {}) {
           ? ' — <strong>rejected</strong>, shown so the reason can be seen rather than argued about'
           : ''
       }. Switch it in the control panel and this changes with the prototype.`
-    : 'Deliberately framework-free: the decision, not the rendering. It should still '
-      + 'hold when the component library moves a major version. This is the same logic '
-      + 'the prototype runs in the Component tab.';
+    : 'The rendering is yours — PrimeNG, Bulma, whatever the stack is. This is only '
+      + 'the decision, so it still holds when the component library moves a major '
+      + 'version. It is the same function the prototype runs in the Component tab.';
 
   // Lucide `copy` and `check`, inlined rather than linked: the page has no
   // build step and should keep working without a network.
@@ -433,6 +458,7 @@ function codeMarkup(rule, state = {}) {
              + '<path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>';
 
   return `
+    ${contractMarkup(rule)}
     <p class="wr-code-note">${note}</p>
     <div class="wr-code-wrap">
       <button class="wr-copy" type="button" data-copy aria-label="Copy this snippet">

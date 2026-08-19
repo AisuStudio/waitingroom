@@ -5,6 +5,21 @@
 
 > A field is shown only once the answers it depends on have been given. Answers already entered are kept when a field is withdrawn, and are restored unchanged if it reappears.
 
+## What you get
+
+| | |
+|---|---|
+| **Takes** | `answers: Record<field, value> — everything answered so far` |
+| **Returns** | `string[] — the field keys to show, on top of the base fields` |
+
+| You get | You render |
+|---|---|
+| `a key in the list` | Render that field, directly after the answer it follows from. |
+| `a key no longer in the list` | Stop rendering it — but keep what it held. Withdrawing a field is not a request to delete the answer. |
+| `baseFields` | Always rendered, in their fixed order, whatever the answers are. |
+
+Call it after every answer. The order the fields are rendered in belongs to the form, not to this function.
+
 ## Rationale
 
 Showing everything at once asks people about circumstances that do not apply to them; showing one thing at a time hides how long the form is. The compromise is to reveal only what follows from an answer already given.

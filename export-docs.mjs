@@ -16,6 +16,11 @@ import { selectionControl } from './rules/selection.js';
 import { conditionalDisclosure } from './rules/disclosure.js';
 import { nameTruncation } from './rules/names.js';
 
+// A literal pipe inside a table cell ends the cell. The return type of the
+// selection rule is a union written with pipes, so without this the table
+// silently collapses into the wrong number of columns.
+const cell = (text) => String(text).replace(/\|/g, '\\|');
+
 const here = dirname(fileURLToPath(import.meta.url));
 const outDir = join(here, 'docs');
 
@@ -29,7 +34,18 @@ function render(rule) {
 
 > ${rule.rule}
 
-## Rationale
+${rule.contract ? `## What you get
+
+| | |
+|---|---|
+| **Takes** | \`${cell(rule.contract.input)}\` |
+| **Returns** | \`${cell(rule.contract.returns)}\` |
+
+| You get | You render |
+|---|---|
+${rule.contract.wiring.map(([v, what]) => `| \`${cell(v)}\` | ${cell(what)} |`).join('\n')}
+${rule.contract.note ? `\n${rule.contract.note}\n` : ''}
+` : ''}## Rationale
 
 ${rule.rationale}
 

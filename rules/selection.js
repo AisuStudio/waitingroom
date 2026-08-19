@@ -95,6 +95,24 @@ export const selectionControl = {
   + 'search field is needed?',
   ],
 
+  // ------------------------------------------------------------- CONTRACT
+  // What the engineer actually receives. The snippet below is a decision
+  // function, not a component: it says which control applies, never how it is
+  // drawn. This block is the part that makes it usable in a stack that has
+  // nothing to do with this page.
+  contract: {
+    input: 'optionCount: number — how many options the field has',
+    returns: "'none' | 'fixed' | 'radio' | 'select'",
+    wiring: [
+      ["'none'", 'Nothing is rendered — the field is not in the form at all.'],
+      ["'fixed'", 'The single option as a set value, not as a control.'],
+      ["'radio'", 'A radio group, every option visible at once.'],
+      ["'select'", 'A select.'],
+    ],
+    note: 'Call it once, when the option list is final. Never while the user is '
+        + 'interacting — see the edge cases.',
+  },
+
   // ------------------------------------------------------------- THE LOGIC
   // The same function the prototype runs and the CODE tab displays.
   // Deliberately framework-neutral: the decision, not the rendering.

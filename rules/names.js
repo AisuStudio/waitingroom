@@ -285,6 +285,25 @@ export const nameTruncation = {
   // initials first, more lines as the fallback.
   chosen: 'initials',
 
+  // ------------------------------------------------------------- CONTRACT
+  // What the engineer actually receives. The snippet in the Code tab is a
+  // decision function, not a component: it says which form of the name
+  // applies, never how it is drawn. This block is the part that makes it
+  // usable in a stack that has nothing to do with this page.
+  contract: {
+    input: 'name, availableWidth: number, measure: (text) => number',
+    returns: '{ step, line1, line2, original }',
+    wiring: [
+      ['line1', 'The first line of the cell.'],
+      ['line2', 'A second line when it is set. The row grows — nothing is cut.'],
+      ['original', 'When true, append the original-script name in brackets.'],
+      ['step', 'Which rung of the ladder was used. Diagnostic — not for rendering.'],
+    ],
+    note: 'measure is injected rather than assumed, so the same decision holds outside '
+        + 'a browser. Pass a real text measurement, not a character count — "Iyer" and '
+        + '"IIII" are the same length and different widths.',
+  },
+
   // ------------------------------------------------------------- THE LOGIC
   // `measure` is injected: the rule knows the strategy, not how text is
   // measured. That keeps it usable outside a browser — in a test, in a

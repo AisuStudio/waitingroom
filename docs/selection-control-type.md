@@ -5,6 +5,22 @@
 
 > Up to 4 options render as a radio group; from 5 options on, as a select.
 
+## What you get
+
+| | |
+|---|---|
+| **Takes** | `optionCount: number — how many options the field has` |
+| **Returns** | `'none' \| 'fixed' \| 'radio' \| 'select'` |
+
+| You get | You render |
+|---|---|
+| `'none'` | Nothing is rendered — the field is not in the form at all. |
+| `'fixed'` | The single option as a set value, not as a control. |
+| `'radio'` | A radio group, every option visible at once. |
+| `'select'` | A select. |
+
+Call it once, when the option list is final. Never while the user is interacting — see the edge cases.
+
 ## Rationale
 
 Below the threshold every option is visible at once: the choice is taken in at a glance and made in one click. Above it, that visibility costs more vertical space than it returns — the list crowds out the context in which the decision is made.

@@ -5,6 +5,22 @@
 
 > When a name does not fit, the ladder is: drop the original-script form, abbreviate given names to initials, wrap to a second line, then both. Nothing is ever cut off at the end — the row grows taller instead.
 
+## What you get
+
+| | |
+|---|---|
+| **Takes** | `name, availableWidth: number, measure: (text) => number` |
+| **Returns** | `{ step, line1, line2, original }` |
+
+| You get | You render |
+|---|---|
+| `line1` | The first line of the cell. |
+| `line2` | A second line when it is set. The row grows — nothing is cut. |
+| `original` | When true, append the original-script name in brackets. |
+| `step` | Which rung of the ladder was used. Diagnostic — not for rendering. |
+
+measure is injected rather than assumed, so the same decision holds outside a browser. Pass a real text measurement, not a character count — "Iyer" and "IIII" are the same length and different widths.
+
 ## Rationale
 
 A name is an identifier, not a label. Cutting it off at the end can produce a different name that belongs to someone else — "Subramanian" cut short is "Subrama…", which identifies nobody, and several distinct names can collapse onto the same stub. Truncation at the end is therefore not the last resort; it is not on the ladder at all.
