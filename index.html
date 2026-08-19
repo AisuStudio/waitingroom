@@ -21,10 +21,9 @@
     <section class="wr-origin">
       <h2 class="wr-origin-title">Where the rules sit in Figma</h2>
       <p class="wr-origin-lead">
-        The designer states the behaviour in the component's own description — a few
-        sentences, at the component, without leaving the tool they are already in. It
-        travels with the component and is readable through the API, which is what makes
-        it a channel rather than a note.
+        The behaviour is written in the component's own description — at the component,
+        without leaving the tool. Readable through the API, which is what makes it a
+        channel rather than a note.
       </p>
 
       <div class="wr-origin-split">
@@ -34,9 +33,8 @@
                  alt="Figma with the Purpose selection component on the canvas and the component configuration panel open beside it, the behaviour typed into the description field."
                  onerror="this.closest('figure').remove()">
             <figcaption>
-              Where it is written: the component's own description field. Nothing is added
-              to the file, nothing is kept alongside it — the behaviour lives on the
-              component. (Interface in German; the description is the part that matters.)
+              The description field. Nothing is kept alongside the file — the behaviour
+              lives on the component. (Interface in German.)
             </figcaption>
           </figure>
 
@@ -45,8 +43,7 @@
                  alt="The Purpose selection component set, showing its two variants side by side: a radio group with three options, and a select."
                  onerror="this.closest('figure').remove()">
             <figcaption>
-              The two variants show what it looks like either side of the threshold — but
-              not where the threshold sits.
+              Both sides of the threshold — but not where it sits.
             </figcaption>
           </figure>
         </div>
@@ -62,26 +59,23 @@
   Spec: WR-104
   Rule: waitingroom → Purpose selection → Rules</pre>
           <p class="wr-origin-caption wr-origin-caption-foot">
-            Same text, fetched through the API — which is what makes the description a
-            channel rather than a note.
+            Same text, fetched through the API.
           </p>
         </div>
       </div>
 
       <p class="wr-origin-foot">
-        What it deliberately is <em>not</em>: a full specification. Where the threshold
-        sits, what happens while options are still loading, whether one is preselected —
-        those get settled here, where they can be executed and checked. Figma states the
-        intent; this page states what happens in every case.
+        What it is <em>not</em>: a full specification. Where the threshold sits, what
+        happens while options load, whether one is preselected — those get settled here,
+        where they can be run. Figma states the intent; this page states every case.
       </p>
     </section>
 
     <p class="wr-foot">
-      Each component's three views come from a single file in <code>rules/</code>.
-      Change a threshold or a condition there and the prototype, the rule text and the
-      code change together. There is no second place to keep in sync. All sample data is
-      synthetic — an invented citizen registration office, with no connection to any real
-      case or person.
+      Each component's three views come from one file in <code>rules/</code>. Change a
+      threshold there and prototype, rule text and code change together — there is no
+      second place to keep in sync. All data is synthetic: an invented citizen
+      registration office, no connection to any real case or person.
     </p>
 
   </main>
@@ -214,9 +208,8 @@ function renderLevels(active = 'all') {
 
   const note = document.createElement('p');
   note.className = 'wr-level-note';
-  note.textContent = 'A building block carries a rule about one control. An assembly '
-    + 'carries a rule about how several of them behave towards one another — the '
-    + 'level at which a specification usually stops being specific.';
+  note.textContent = 'A building block carries a rule about one control; an assembly, '
+    + 'a rule about how several behave towards one another.';
 
   const mount = document.getElementById('levels');
   mount.replaceChildren(bar, note);

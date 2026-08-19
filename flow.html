@@ -16,7 +16,7 @@
     <h2 class="wr-page-heading">The workflow</h2>
     <p class="wr-page-lead">
       How a requirement becomes a component that can be built without asking back.
-      Everything below is marked: what runs today, and what does not exist yet.
+      Marked throughout: what runs today, what does not exist yet.
     </p>
 
     <!-- ------------------------------------------------------------ steps -->
@@ -29,14 +29,13 @@
           <span class="wr-status wr-status-theirs">exists — their system</span>
         </div>
         <p>
-          States <strong>what is needed</strong>, as user stories and acceptance criteria
-          — not how it looks. A spec that prescribes the control is reaching into design.
+          States <strong>what is needed</strong> — user stories and acceptance criteria.
+          Not how it looks.
         </p>
         <p class="wr-step-note">
-          Acceptance criteria say when a story is done. They do not say how the control
-          behaves at its edges, and they are not meant to. So the behaviour is undefined
-          here, and that is correct — it only becomes a problem if nothing further down
-          defines it either.
+          Acceptance criteria say when a story is done, not how a control behaves at its
+          edges. That gap belongs here. It only becomes a problem if nothing further down
+          closes it.
         </p>
       </li>
 
@@ -47,25 +46,14 @@
           <span class="wr-status wr-status-theirs">exists — their system</span>
         </div>
         <p>
-          States <strong>what it looks like</strong>. Components from the library, colour
-          from the tokens.
-        </p>
-        <p>
-          And this is where the rule is written down: in the
-          <strong>component's own description field</strong>. What applies, what happens
-          in the awkward cases, which spec it comes from. A few sentences, typed at the
-          component by the person who decided it — no second tool, no second document to
-          keep in step.
-        </p>
-        <p>
-          The description is read back through the API, which is what makes it a
-          <strong>channel rather than a note</strong>: everything downstream starts from
-          the text the designer wrote, not from someone's reading of the screen.
+          States <strong>what it looks like</strong> — and carries the rule, typed into
+          the <strong>component's own description field</strong>: what applies, the
+          awkward cases, which spec it came from.
         </p>
         <p class="wr-step-note">
-          Figma itself holds states, not rules — two variants show both sides of a
-          threshold but cannot say where it sits. The description is where that sentence
-          goes, and it travels with the component when the component is reused.
+          Read back through the API, which makes it a channel rather than a note. Two
+          variants can show both sides of a threshold; only the description says where
+          it sits.
         </p>
       </li>
 
@@ -76,18 +64,13 @@
           <span class="wr-status wr-status-manual">today by hand · skill planned</span>
         </div>
         <p>
-          Description, spec and the cross-cutting rules become one file: what applies,
-          why, the edge cases, who decided — plus the executable logic.
-        </p>
-        <p>
-          <strong>And a list of what none of them answered.</strong> Those are asked,
-          never invented. An answer nobody chose is worse than an open question, because
-          it looks like a decision.
+          Description and spec become one file: what applies, why, the edge cases, who
+          decided — plus the executable logic. <strong>And a list of what none of them
+          answered.</strong>
         </p>
         <p class="wr-step-note">
-          The skill standardises the questions, not the answers. Every threshold gets
-          asked what happens at exactly N; every space conflict, what may not be
-          sacrificed.
+          Those get asked, never invented. An answer nobody chose is worse than an open
+          question, because it looks like a decision.
         </p>
       </li>
 
@@ -99,16 +82,12 @@
         </div>
         <p>
           The rule becomes <strong>executable</strong>. A control panel drives it past its
-          own thresholds — what is on screen is the rule working, not one result somebody
-          picked.
-        </p>
-        <p>
-          Prototype, rule text and snippet come from one file. Change the threshold and
-          all three follow.
+          own thresholds, so what is on screen is the rule working — not one result
+          somebody picked. Prototype, rule text and snippet all come from that one file.
         </p>
         <p class="wr-step-note">
           Explicitly not production code. That was the failure last time: something
-          arrived looking like a delivery and was judged as one.
+          arrived looking like a delivery and got judged as one.
         </p>
       </li>
 
@@ -122,7 +101,7 @@
           “Could you build this from it, without asking the designer?”
         </p>
         <p>
-          Every “no, I'd still need…” is a line missing from the rule. That is the
+          Every “I'd still need…” is a line missing from the rule. That is the
           measurement; the prototype is only the means.
         </p>
       </li>
@@ -134,12 +113,12 @@
           <span class="wr-status wr-status-built">built</span>
         </div>
         <p>
-          Answers become edge cases. Changes become entries in the change trail, with a
-          reason — not silent edits that pretend it was always so.
+          Answers become edge cases; changes become dated entries with a reason, not
+          silent edits that pretend it was always so.
         </p>
         <p class="wr-step-note">
-          Two of the three rules already carry a second entry. Both were found by working
-          the prototype, not by reading it.
+          Two of the three rules already carry a second entry — both found by working the
+          prototype, not by reading it.
         </p>
       </li>
 
@@ -161,8 +140,7 @@
     <section class="wr-origin">
       <h2 class="wr-origin-title">Which artefact carries what</h2>
       <p class="wr-origin-lead">
-        Each exists so something does not have to be decided twice. That, not typing
-        speed, is where throughput comes from.
+        Each exists so something is not decided twice.
       </p>
 
       <table class="wr-cond">
@@ -182,26 +160,17 @@
           </tr>
           <tr>
             <td><code>design.md</code><div class="wr-cond-label">one level above the rules</div></td>
-            <td>
-              What holds everywhere, so it is not repeated per component: names, selection
-              controls, missing data. Plus the rule types and their questions.
-            </td>
+            <td>What holds everywhere, so it is not repeated per component — plus the rule types and their questions.</td>
             <td><span class="wr-status wr-status-planned">planned</span></td>
           </tr>
           <tr>
             <td>rules skill<div class="wr-cond-label">prose → rule</div></td>
-            <td>
-              Same questions, same format, every time. Translates — never authors.
-            </td>
+            <td>Same questions, same format, every time. Translates — never authors.</td>
             <td><span class="wr-status wr-status-planned">planned</span></td>
           </tr>
           <tr>
             <td>check script<div class="wr-cond-label">runs on every change</div></td>
-            <td>
-              All fields present, change trail and open questions non-empty, and no
-              parameter spelled out as a literal in prose — the drift that already
-              happened here once.
-            </td>
+            <td>All fields present, and no parameter spelled out as a literal in prose — the drift that already happened here once.</td>
             <td><span class="wr-status wr-status-planned">planned</span></td>
           </tr>
           <tr>
@@ -213,9 +182,8 @@
       </table>
 
       <p class="wr-origin-foot">
-        In that order: the check script first, because it makes consistency measurable;
-        <code>design.md</code> from what the script cannot check; the skill last, because
-        it needs both as its yardstick.
+        In that order: the check script first, <code>design.md</code> from what it cannot
+        check, the skill last — it needs both as its yardstick.
       </p>
     </section>
 
@@ -224,18 +192,16 @@
       <h2 class="wr-origin-title">Where the throughput comes from</h2>
       <ul class="wr-payoff">
         <li>
-          <strong>Fewer questions back.</strong> Every edge case settled in advance is a
+          <strong>Fewer questions back.</strong> An edge case settled in advance is a
           message not sent and a wait not had.
         </li>
         <li>
-          <strong>Fewer full rounds.</strong> A colour change is a token change. Where
-          component and design point at the same token, nothing is rebuilt and nothing is
-          handed over.
+          <strong>Fewer full rounds.</strong> Where component and design point at the same
+          token, a colour change is a token change — nothing gets rebuilt or handed over.
         </li>
         <li>
           <strong>Fewer decisions.</strong> Once “from five options on, a select” is
-          settled, component forty inherits it. This is the one that compounds — and why a
-          <code>design.md</code> of <em>decisions</em> beats one of style guidance.
+          settled, component forty inherits it. This is the one that compounds.
         </li>
       </ul>
       <p class="wr-origin-foot">
@@ -248,59 +214,52 @@
     <aside class="wr-note">
       <h2 class="wr-note-title">Where this might connect to the regulatory side</h2>
       <p class="wr-note-lead">
-        A question for whoever owns that side, not a claim from here. But the shape of
-        the rule format was not chosen at random.
+        A question for whoever owns that side, not a claim from here.
       </p>
 
       <p>
-        For medical devices, <strong>IEC 62366-1</strong> asks that usability be worked on
-        as a documented process rather than as taste. Two of its ideas matter here: a
-        <strong>user interface specification</strong> has to exist, and
-        <strong>use errors are treated as risks</strong> — a control that can be
-        misread is a hazard, not a preference. Its results are collected in a usability
-        engineering file, and an auditor reads that file rather than the product.
+        For medical devices, <strong>IEC 62366-1</strong> wants usability handled as a
+        documented process: a <strong>user interface specification</strong> has to exist,
+        and <strong>use errors count as risks</strong>. An auditor reads the resulting
+        file, not the product.
       </p>
 
       <p>
-        What such a file asks of a decision is almost exactly the four fields a rule
-        carries here: <em>what applies, why, what happens in the awkward cases, and who
-        decided it when</em>. Where those are written down as a by-product of building,
-        they do not have to be reconstructed afterwards from screenshots and memory.
+        What that file asks of a decision is almost exactly the four fields a rule carries
+        here — <em>what applies, why, the awkward cases, who decided it when</em>. Written
+        down while building, they don't have to be reconstructed later from screenshots
+        and memory.
       </p>
 
       <div class="wr-note-caution">
         <h3>The honest limits</h3>
         <ul>
           <li>
-            <strong>Not every rule is safety-relevant.</strong> The threshold between a
-            radio group and a select almost certainly is not. A name that can be confused
-            with another person's very much can be — patient misidentification is a
-            textbook hazard, and it is the same rule, only applied to a name column.
-            Sorting which is which is the work; claiming everything counts would be
-            exactly the kind of over-documentation that makes people stop reading.
+            <strong>Not every rule is safety-relevant.</strong> Radio group versus select
+            almost certainly is not. A name that can be confused with another person's
+            very much is — patient misidentification is a textbook hazard, and it is this
+            same rule applied to a name column. Sorting which is which is the work.
           </li>
           <li>
             <strong>Whether it applies at all depends on the product.</strong>
-            Classification decides that, and the answer is not obvious from the outside.
+            Classification decides that, and not from the outside.
           </li>
           <li>
-            <strong>Gematik approval is a separate matter.</strong> Its requirements are
-            not the same as the medical-device route, even though both end in someone
-            checking documentation. Which one is in force here — or both — is worth
-            establishing before anyone builds a process around either.
+            <strong>Gematik approval is a separate route.</strong> Which one is in force
+            here — or both — is worth establishing before building a process around
+            either.
           </li>
         </ul>
       </div>
 
       <p class="wr-note-foot">
-        So: not “this satisfies the standard”. Rather — if a user interface specification
-        has to exist anyway, it is cheaper to have it fall out of the work than to write
-        it twice.
+        Not “this satisfies the standard”. Rather: if the specification has to exist
+        anyway, cheaper to have it fall out of the work than to write it twice.
       </p>
     </aside>
 
     <p class="wr-foot">
-      Anything marked <em>planned</em> does not exist yet. The three components under
+      Anything marked <em>planned</em> does not exist yet. The three under
       <a href="index.html">Components</a> do — including two rules that changed within a
       day, because working the prototype exposed what reading it had not.
     </p>
