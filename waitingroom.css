@@ -411,9 +411,23 @@ body {
 .wr-name-line2 { display: block; }
 .wr-name-original { color: var(--text-muted); }
 
-/* The row that had nothing left to give up: it overflows on purpose, and
-   says so, rather than quietly cutting the family name. */
-.wr-col-name[data-step='overflow'] { white-space: nowrap; }
+/* The row that had nothing left to give up. The rule says the column gives
+   way rather than the name being cut — but "gives way" must not mean
+   "writes over the next column". The cell scrolls within its own width, so
+   the name stays complete, the grid stays aligned, and the neighbouring
+   values stay readable. A scrollbar in one row is the nuisance the rule
+   accepted; an unreadable waiting time is not.
+   Scrolling is contained here rather than on the table, because letting the
+   column grow to fit would change the width the rule just measured against. */
+.wr-col-name[data-step='overflow'] {
+  white-space: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  /* Fades at the right edge so a cut-off name reads as "continues" rather
+     than as the whole name. */
+  mask-image: linear-gradient(to right, #000 calc(100% - 18px), transparent 100%);
+}
 .wr-col-name[data-step='overflow'] .wr-name-line {
   border-bottom: 1px dotted var(--accent-border);
 }
