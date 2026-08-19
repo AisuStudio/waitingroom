@@ -151,6 +151,16 @@ for (const rule of RULES) {
   if (literals) {
     fail('waitingroom.css', `font-size outside the scale: ${[...new Set(literals)].join(', ')}`);
   }
+
+  // Nothing on stock: every defined token must be consumed somewhere. This is
+  // how three dead component tokens and twelve unstocked scale steps got in —
+  // definitions accrete silently, because an unused definition breaks nothing.
+  const defined = [...css.matchAll(/^\s*(--[a-z][a-z0-9-]*)\s*:/gm)].map((m) => m[1]);
+  for (const name of new Set(defined)) {
+    if (!css.includes(`var(${name})`)) {
+      fail('waitingroom.css', `${name} is defined but never consumed — delete it or use it`);
+    }
+  }
 }
 
 // ----------------------------------------------------------------- report

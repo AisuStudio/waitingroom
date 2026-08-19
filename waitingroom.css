@@ -16,30 +16,20 @@
    ========================================================================= */
 
 :root {
-  /* ---------- 1 · PRIMITIVE — raw scale values, no meaning attached ---------- */
+  /* ---------- 1 · PRIMITIVE — raw scale values, no meaning attached ----------
+     Only the stocked steps. The full 12-step scales live at radix-ui.com; a
+     step is taken from there when a component earns it, not kept on stock.
+     The Radix step numbers are kept (6 stays 6) so the reference holds. */
   --slate-1:  #fcfcfd;
-  --slate-2:  #f9f9fb;
   --slate-3:  #f0f0f3;
-  --slate-4:  #e8e8ec;
-  --slate-5:  #e0e1e6;
   --slate-6:  #d9d9e0;
-  --slate-7:  #cdced6;
   --slate-8:  #b9bbc6;
-  --slate-9:  #8b8d98;
-  --slate-10: #80838d;
   --slate-11: #60646c;
   --slate-12: #1c2024;
 
-  --blue-1:  #fbfdff;
-  --blue-2:  #f4faff;
   --blue-3:  #e6f4fe;
-  --blue-4:  #d5efff;
-  --blue-5:  #c2e5ff;
-  --blue-6:  #acd8fc;
   --blue-7:  #8ec8f6;
-  --blue-8:  #5eb1ef;
   --blue-9:  #0090ff;
-  --blue-10: #0588f0;
   --blue-11: #0d74ce;
   --blue-12: #113264;
 
@@ -115,15 +105,11 @@
      tier knows that. */
   --ground: var(--slate-3);
 
-  --slate-1:  #111113;  --slate-2:  #18191b;  --slate-3:  #212225;
-  --slate-4:  #272a2d;  --slate-5:  #2e3135;  --slate-6:  #363a3f;
-  --slate-7:  #43484e;  --slate-8:  #5a6169;  --slate-9:  #696e77;
-  --slate-10: #777b84;  --slate-11: #b0b4ba;  --slate-12: #edeef0;
+  --slate-1:  #111113;  --slate-3:  #212225;  --slate-6:  #363a3f;
+  --slate-8:  #5a6169;  --slate-11: #b0b4ba;  --slate-12: #edeef0;
 
-  --blue-1:  #0d1520;  --blue-2:  #111927;  --blue-3:  #0d2847;
-  --blue-4:  #003362;  --blue-5:  #004074;  --blue-6:  #104d87;
-  --blue-7:  #205d9e;  --blue-8:  #2870bd;  --blue-9:  #0090ff;
-  --blue-10: #3b9eff;  --blue-11: #70b8ff;  --blue-12: #c2e6ff;
+  --blue-3:  #0d2847;  --blue-7:  #205d9e;  --blue-9:  #0090ff;
+  --blue-11: #70b8ff;  --blue-12: #c2e6ff;
 
   /* No departure needed here: on a dark ground step 11 already clears 7:1. */
   --blue-11-deep: var(--blue-11);
@@ -157,7 +143,7 @@
    and a near-black code block at once — and does not. This one is drawn in the
    link blue, which is repointed per mode and clears 4.5:1 on both grounds. */
 :focus-visible {
-  outline: 2px solid var(--blue-11-deep);
+  outline: 2px solid var(--accent-text);
   outline-offset: 2px;
 }
 
@@ -478,7 +464,7 @@ body {
 .wr-edge dt { font-weight: 600; font-size: var(--t-body); }
 .wr-edge dd { margin: 2px 0 0; color: var(--text-muted); max-width: 68ch; }
 
-.wr-open { border-left: 3px solid var(--slate-9); padding-left: 12px; }
+.wr-open { border-left: 3px solid var(--border); padding-left: 12px; }
 .wr-open li { margin-bottom: 6px; max-width: 66ch; }
 
 .wr-prov { font-size: var(--t-body); color: var(--text-muted); }
@@ -945,7 +931,7 @@ body {
   display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline;
 }
 .wr-signature strong { color: var(--text); font-weight: 600; }
-.wr-signature a { color: var(--blue-11-deep); text-decoration: none; }
+.wr-signature a { color: var(--accent-text); text-decoration: none; }
 .wr-signature a:hover { text-decoration: underline; }
 
 /* ---- Regulatory note ----
