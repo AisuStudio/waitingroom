@@ -74,13 +74,12 @@
      Looks redundant, and is — that is the point. A component can deviate
      without the semantic tier being touched, and one place shows which role
      it claims. */
-  --field-label-text:   var(--text);
-  --field-border:       var(--border);
+  /* One label token, not one per control: both were aliases of the same role
+     and had never diverged. A component token earns its slot by deviating or
+     by being a real control surface — not by existing. */
+  --label-text:         var(--text);
 
-  --radio-border:       var(--border-strong);
-  --radio-border-on:    var(--accent-solid);
   --radio-dot:          var(--accent-solid);
-  --radio-label-text:   var(--text);
 
   --select-bg:          var(--surface);
   --select-border:      var(--border);
@@ -425,12 +424,12 @@ body {
 /* ---- The prototype ---- */
 .wr-stage { padding: 4px 0; }
 .wr-field { max-width: 380px; }
-.wr-field-label { font-weight: 600; color: var(--field-label-text); margin-bottom: 8px; }
+.wr-field-label { font-weight: 600; color: var(--label-text); margin-bottom: 8px; }
 
 .wr-radios { display: grid; gap: 6px; }
 .wr-radio { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .wr-radio input { accent-color: var(--radio-dot); width: 16px; height: 16px; }
-.wr-radio span { color: var(--radio-label-text); }
+.wr-radio span { color: var(--label-text); }
 
 .wr-select {
   width: 100%;
