@@ -9,21 +9,7 @@
 <body class="wr-flow-page">
 <div class="wr-page">
 
-  <div class="wr-topbar">
-    <div>
-      <h1 class="wr-title">waitingroom</h1>
-      <p class="wr-subtitle">
-        A holding room for behaviour rules. Not production code — the place where a
-        rule becomes executable before it gets built.
-      </p>
-    </div>
-    <button class="wr-theme-toggle" id="theme-toggle" type="button">Dark</button>
-  </div>
-
-  <nav class="wr-nav">
-    <a href="index.html">Components</a>
-    <a href="flow.html" aria-current="page">Flow</a>
-  </nav>
+  <header id="site-header"></header>
 
   <h2 class="wr-page-heading">The flow</h2>
   <p class="wr-page-lead">
@@ -319,9 +305,11 @@
 </div>
 
 <script type="module">
-import { applyStoredTheme, wireThemeToggle } from './theme.js';
+import { applyStoredTheme, wireModeControl } from './theme.js';
+import { renderHeader } from './header.js';
 applyStoredTheme();
-wireThemeToggle(document.getElementById('theme-toggle'));
+renderHeader(document.getElementById('site-header'));
+wireModeControl(document.querySelector('.wr-mode'));
 </script>
 </body>
 </html>

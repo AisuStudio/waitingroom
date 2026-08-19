@@ -9,26 +9,9 @@
 <body>
 <div class="wr-page">
 
-  <div class="wr-topbar">
-    <div>
-      <h1 class="wr-title">waitingroom</h1>
-      <p class="wr-subtitle">
-        A holding room for behaviour rules. Not production code — the place where a
-        rule becomes executable before it gets built.
-      </p>
-    </div>
-    <button class="wr-theme-toggle" id="theme-toggle" type="button">Dark</button>
-  </div>
+  <header id="site-header"></header>
 
-  <nav class="wr-nav">
-    <a href="index.html" aria-current="page">Components</a>
-    <a href="flow.html">Flow</a>
-  </nav>
-
-  <div class="wr-level">
-    <button class="wr-level-chip" aria-current="false" type="button">Building blocks</button>
-    <button class="wr-level-chip" aria-current="true" type="button">Assemblies</button>
-  </div>
+  <div id="levels"></div>
 
   <div id="components"></div>
 
@@ -119,9 +102,12 @@ import { serviceList, MAX_SERVICES } from './components/data.js';
 import { renderSelectionField } from './components/selection-field.js';
 import { renderAddressChange } from './components/address-change.js';
 import { renderWaitingList } from './components/waiting-list.js';
-import { applyStoredTheme, wireThemeToggle } from './theme.js';
+import { applyStoredTheme, wireModeControl } from './theme.js';
+import { renderHeader } from './header.js';
 
 applyStoredTheme();
+renderHeader(document.getElementById('site-header'));
+wireModeControl(document.querySelector('.wr-mode'));
 
 /* Two sources per component, because they answer different questions: the spec
    says what has to be possible, Figma says what it looks like. Neither states
@@ -131,6 +117,7 @@ const COMPONENTS = [
     key: 'selection',
     name: 'Purpose selection',
     kind: 'Threshold',
+    level: 'block',
     rule: selectionControl,
     sources: {
       spec: 'https://github.com/AisuStudio/waitingroom/blob/main/spec/purpose-selection.md',
@@ -145,6 +132,7 @@ const COMPONENTS = [
     key: 'address',
     name: 'Change of address',
     kind: 'State dependency',
+    level: 'assembly',
     rule: conditionalDisclosure,
     sources: {
       spec: 'https://github.com/AisuStudio/waitingroom/blob/main/spec/change-of-address.md',
@@ -158,6 +146,7 @@ const COMPONENTS = [
     key: 'waiting',
     name: 'Waiting list',
     kind: 'Space conflict',
+    level: 'assembly',
     rule: nameTruncation,
     sources: {
       spec: 'https://github.com/AisuStudio/waitingroom/blob/main/spec/waiting-list.md',
@@ -177,8 +166,62 @@ const COMPONENTS = [
   },
 ];
 
+/* Two levels, because a rule attaches differently at each. On a building
+   block the rule governs one control; on an assembly it governs how several
+   of them behave towards one another — which is where the questions the spec
+   left open actually surface. The filter exists so that difference can be
+   looked at rather than asserted. */
+const LEVELS = [
+  { key: 'all',      label: 'All' },
+  { key: 'block',    label: 'Building blocks' },
+  { key: 'assembly', label: 'Assemblies' },
+];
+
 const root = document.getElementById('components');
-COMPONENTS.forEach((cmp) => root.append(buildBlock(cmp)));
+
+// Built once and then shown or hidden. Rebuilding would throw away the state
+// of every control panel, and a filter that resets the thing being filtered
+// is worse than no filter.
+const blocks = COMPONENTS.map((cmp) => {
+  const node = buildBlock(cmp);
+  root.append(node);
+  return { cmp, node };
+});
+
+renderLevels();
+
+function renderLevels(active = 'all') {
+  const bar = document.createElement('div');
+  bar.className = 'wr-level';
+  bar.setAttribute('role', 'group');
+  bar.setAttribute('aria-label', 'Filter by level');
+
+  LEVELS.forEach(({ key, label }) => {
+    const n = key === 'all'
+      ? COMPONENTS.length
+      : COMPONENTS.filter((c) => c.level === key).length;
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'wr-level-chip';
+    b.setAttribute('aria-pressed', String(key === active));
+    b.innerHTML = `${esc(label)}<span class="wr-level-count">${n}</span>`;
+    b.addEventListener('click', () => renderLevels(key));
+    bar.append(b);
+  });
+
+  const note = document.createElement('p');
+  note.className = 'wr-level-note';
+  note.textContent = 'A building block carries a rule about one control. An assembly '
+    + 'carries a rule about how several of them behave towards one another — the '
+    + 'level at which a specification usually stops being specific.';
+
+  const mount = document.getElementById('levels');
+  mount.replaceChildren(bar, note);
+
+  blocks.forEach(({ cmp, node }) => {
+    node.hidden = active !== 'all' && cmp.level !== active;
+  });
+}
 
 function buildBlock(cmp) {
   const section = document.createElement('section');
@@ -187,6 +230,7 @@ function buildBlock(cmp) {
     <div class="wr-component-head">
       <h2 class="wr-component-name">${esc(cmp.name)}</h2>
       <span class="wr-kind">${esc(cmp.kind)}</span>
+      <span class="wr-level-tag">${cmp.level === 'block' ? 'Building block' : 'Assembly'}</span>
     </div>
     <div class="wr-tabbar" role="tablist">
       <button class="wr-tab" role="tab" aria-selected="true"  data-panel="component">Component</button>
@@ -448,9 +492,6 @@ function snippet(rule, state = {}) {
       .replace(/this\.threshold/g, 'THRESHOLD'),
   ].join('\n');
 }
-
-/* ------------------------------------------------------------- Theme */
-wireThemeToggle(document.getElementById('theme-toggle'));
 
 function esc(s) {
   return String(s).replace(/[&<>"']/g, (c) => (

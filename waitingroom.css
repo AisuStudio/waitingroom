@@ -129,40 +129,153 @@ body {
 
 .wr-page { max-width: 860px; margin: 0 auto; }
 
-.wr-topbar { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.wr-title {
-  font-size: 34px; font-weight: 650; margin: 0;
-  letter-spacing: -0.02em; line-height: 1.1;
-}
-@media (max-width: 560px) { .wr-title { font-size: 27px; } }
-.wr-subtitle { color: var(--text-muted); margin: 5px 0 0; max-width: 62ch; }
+/* ============================================================================
+   Masthead
+   ----------------------------------------------------------------------------
+   Rendered by header.js into both pages, so the two cannot disagree about it.
 
-.wr-theme-toggle {
-  border: 1px solid var(--border);
-  background: var(--surface);
+   Flush left and asymmetric on purpose: bar, wordmark, subtitle, navigation
+   and every section below share one left edge. The rule across the top gives
+   that edge something to hang from — without it, text starting at the margin
+   reads as a default rather than as a placement.
+   ========================================================================= */
+
+.wr-head { margin-bottom: 30px; }
+
+.wr-head-bar {
+  height: 5px;
+  background: var(--text);
+  margin-bottom: 14px;
+}
+
+.wr-head-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.wr-wordmark {
+  display: block;
+  margin: 0 0 0 -0.035em;   /* optical: a heavy cap stem sits inside its own
+                               side bearing and would otherwise hang right of
+                               everything beneath it */
+  font-size: clamp(32px, 6vw, 50px);
+  line-height: 0.92;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: none;
+}
+.wr-wordmark:hover { color: var(--accent-text); }
+
+.wr-subtitle {
   color: var(--text-muted);
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 12px;
+  margin: 13px 0 0;
+  max-width: 64ch;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+/* ---- Colour mode ----
+   Two named states rather than one button labelled with the other mode: the
+   old control read "Dark" and it was not answerable, from looking at it,
+   whether that was the state or the action. */
+.wr-mode {
+  display: inline-flex;
+  flex: none;
+  border: 1px solid var(--border);
+}
+.wr-mode-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding: 7px 11px;
   cursor: pointer;
 }
+.wr-mode-btn + .wr-mode-btn { border-left: 1px solid var(--border); }
+.wr-mode-btn:hover { color: var(--text); }
+.wr-mode-btn[aria-pressed='true'] { background: var(--text); color: var(--bg); }
 
-.wr-level { display: flex; gap: 8px; margin: 24px 0 8px; }
+/* ---- Page navigation ----
+   Under the title rather than in a corner: with two pages the second is
+   otherwise found by accident, and the flow page is half the argument.
+   The marker sits on the rule, so the current page hangs from it. */
+.wr-nav {
+  display: flex;
+  margin: 26px 0 0;
+  border-top: 1px solid var(--border-strong);
+}
+.wr-nav-link {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  margin-top: -1px;
+  padding: 13px 26px 13px 0;
+  border-top: 3px solid transparent;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+.wr-nav-num {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--text-muted);
+}
+.wr-nav-link:hover { color: var(--text); }
+.wr-nav-link[aria-current='page'] {
+  color: var(--text);
+  border-top-color: var(--accent-solid);
+}
+.wr-nav-link[aria-current='page'] .wr-nav-num { color: var(--accent-text); }
+
+/* ---- Level filter ----
+   These two used to be inert labels. They now filter, which is the only
+   honest form for something that looks like a control. */
+.wr-level {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 34px 0 0;
+}
 .wr-level-chip {
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-muted);
-  border-radius: 999px;
-  padding: 4px 12px;
-  font-size: 11px;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .04em;
-  cursor: default;
+  letter-spacing: .09em;
+  cursor: pointer;
 }
-.wr-level-chip[aria-current='true'] {
-  background: var(--accent-bg);
-  border-color: var(--accent-border);
-  color: var(--accent-text);
+.wr-level-chip:hover { color: var(--text); border-color: var(--border-strong); }
+.wr-level-chip[aria-pressed='true'] {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+/* Set apart by size and weight, not by fading it: at 10px an opacity step
+   drops below the contrast floor, and a count nobody can read is decoration. */
+.wr-level-count { margin-left: 7px; font-weight: 600; }
+.wr-level-note {
+  margin: 12px 0 0;
+  max-width: 68ch;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  line-height: 1.5;
 }
 
 .wr-component-name { font-size: 17px; font-weight: 600; margin: 24px 0 10px; }
@@ -298,12 +411,31 @@ body {
    Multiple components on one page
    ========================================================================= */
 
-.wr-component { margin-bottom: 48px; }
-.wr-component-head { display: flex; align-items: baseline; gap: 10px; margin: 28px 0 10px; }
+.wr-component { margin-bottom: 56px; }
+
+/* A rule between components rather than more air. Three workbenches stacked
+   with only whitespace between them read as one long page: the control panel
+   of the second sits close enough to the trace of the first to look like part
+   of it. */
+.wr-component + .wr-component {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
+.wr-component-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin: 30px 0 12px; }
+.wr-kind, .wr-level-tag {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  padding: 3px 8px; white-space: nowrap;
+}
+/* The rule type is the sharper of the two labels, so it carries the outline;
+   the level is context and stays quiet. */
 .wr-kind {
-  font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
-  color: var(--text-muted); border: 1px solid var(--border);
-  border-radius: 999px; padding: 2px 8px;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.wr-level-tag {
+  color: var(--text-muted);
+  background: var(--surface-sunk);
 }
 
 /* ---- The change-of-address form ---- */
@@ -527,27 +659,6 @@ body {
 .wr-origin-caption-foot { margin: 8px 0 0; text-transform: none; letter-spacing: 0; font-size: 11.5px; }
 
 
-/* ---- Page navigation ----
-   Sits under the title rather than in the corner: with two pages the second
-   one is otherwise found by accident, and the flow page is half the argument. */
-.wr-nav {
-  display: flex; gap: 4px;
-  margin: 18px 0 0;
-  border-bottom: 1px solid var(--border);
-}
-.wr-nav a {
-  text-decoration: none;
-  color: var(--text-muted);
-  font-size: 13px; font-weight: 600;
-  padding: 9px 14px;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-}
-.wr-nav a:hover { color: var(--text); }
-.wr-nav a[aria-current='page'] {
-  color: var(--text);
-  border-bottom-color: var(--accent-solid);
-}
 .wr-page-heading { font-size: 21px; margin: 30px 0 8px; }
 .wr-page-lead { color: var(--text-muted); margin: 0; max-width: 62ch; }
 
@@ -561,7 +672,6 @@ body {
    be read end to end, so it gets reading sizes.
    ========================================================================= */
 
-.wr-flow-page .wr-subtitle,
 .wr-flow-page .wr-page-lead,
 .wr-flow-page .wr-step > p,
 .wr-flow-page .wr-origin-lead,
