@@ -587,3 +587,37 @@ body {
 .wr-signature strong { color: var(--text); font-weight: 600; }
 .wr-signature a { color: var(--accent-text); text-decoration: none; }
 .wr-signature a:hover { text-decoration: underline; }
+
+/* ---- Regulatory note ----
+   Visually set apart because it makes a different kind of claim than the rest
+   of the page: everything else describes what was built, this one raises a
+   question about a domain the author does not own. */
+.wr-note {
+  margin: 48px 0 0;
+  padding: 22px 24px;
+  border: 1px solid var(--border-strong);
+  border-left: 4px solid var(--accent-solid);
+  border-radius: 10px;
+  background: var(--bg);
+}
+.wr-note-title { font-size: 18px; margin: 0 0 8px; }
+.wr-note-lead { color: var(--text-muted); margin: 0 0 16px; max-width: 62ch; font-style: italic; }
+.wr-note p { max-width: 64ch; margin: 0 0 14px; }
+.wr-note-caution {
+  border: 1px dashed var(--border-strong);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 18px 0;
+  background: var(--surface);
+}
+.wr-note-caution h3 {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--text-muted); margin: 0 0 10px;
+}
+.wr-note-caution ul { margin: 0; padding-left: 18px; }
+.wr-note-caution li { margin-bottom: 10px; max-width: 62ch; }
+.wr-note-caution li:last-child { margin-bottom: 0; }
+.wr-note-foot { color: var(--text-muted); margin: 0; max-width: 64ch; }
+.wr-flow-page .wr-note p,
+.wr-flow-page .wr-note-caution li { font-size: 16px; line-height: 1.55; }
+.wr-flow-page .wr-note-lead { font-size: 16px; line-height: 1.55; }
