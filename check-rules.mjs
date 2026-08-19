@@ -146,7 +146,7 @@ for (const rule of RULES) {
   }
 
   const css = await readFile(join(here, 'waitingroom.css'), 'utf8');
-  const scaleBlock = css.slice(css.indexOf('--t-micro'), css.indexOf('--t-head') + 60);
+  const scaleBlock = css.slice(css.indexOf('--t-small'), css.indexOf('--t-head') + 60);
   const literals = css.replace(scaleBlock, '').match(/font-size: [0-9.]+px/g);
   if (literals) {
     fail('waitingroom.css', `font-size outside the scale: ${[...new Set(literals)].join(', ')}`);
