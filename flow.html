@@ -27,9 +27,8 @@
 
   <h2 class="wr-page-heading">The flow</h2>
   <p class="wr-page-lead">
-    How a requirement becomes a component that can be built without asking back — and
-    which artefact carries which part of that. Marked throughout: what runs today, and
-    what does not exist yet.
+    How a requirement becomes a component that can be built without asking back.
+    Everything below is marked: what runs today, and what does not exist yet.
   </p>
 
   <!-- ------------------------------------------------------------ steps -->
@@ -42,12 +41,12 @@
         <span class="wr-status wr-status-theirs">exists — their system</span>
       </div>
       <p>
-        States <strong>what has to be possible</strong>. Deliberately does not state how
-        it is presented — a spec that prescribes the control is reaching into design.
+        States <strong>what must be possible</strong> — not how it looks. A spec that
+        prescribes the control is reaching into design.
       </p>
       <p class="wr-step-note">
-        Consequence: the behaviour is undefined at this point, and that is correct.
-        It only becomes a problem when nothing downstream defines it either.
+        So the behaviour is undefined here, and that is correct. It only becomes a
+        problem if nothing further down defines it either.
       </p>
     </li>
 
@@ -58,18 +57,16 @@
         <span class="wr-status wr-status-theirs">exists — their system</span>
       </div>
       <p>
-        States <strong>what it looks like</strong>, and with variants what it looks like
-        either side of a threshold. Components come from the component library, colour
-        from the three-tier tokens.
+        States <strong>what it looks like</strong>. Components from the library, colour
+        from the tokens.
       </p>
       <p>
-        The behaviour goes into the <strong>component description</strong> — three to
-        five sentences, at the component, without leaving the tool. It travels with the
-        component and is readable through the API.
+        The behaviour goes into the <strong>component description</strong>: a few
+        sentences, at the component, readable through the API.
       </p>
       <p class="wr-step-note">
-        Figma holds states, not rules. Two variants show what happens either side of a
-        threshold; they cannot say where the threshold sits.
+        Figma holds states, not rules. Two variants show both sides of a threshold —
+        they cannot say where it sits.
       </p>
     </li>
 
@@ -80,20 +77,18 @@
         <span class="wr-status wr-status-manual">today by hand · skill planned</span>
       </div>
       <p>
-        The description, the spec and the cross-cutting rules are turned into one rule
-        file: what applies, why, the edge cases, who decided it — plus the executable
-        logic.
+        Description, spec and the cross-cutting rules become one file: what applies,
+        why, the edge cases, who decided — plus the executable logic.
       </p>
       <p>
-        <strong>And a list of what none of the sources answered.</strong> Those are
-        asked, never invented. A plausible-looking answer nobody actually chose is worse
-        than an open question, because it looks like a decision.
+        <strong>And a list of what none of them answered.</strong> Those are asked,
+        never invented. An answer nobody chose is worse than an open question, because
+        it looks like a decision.
       </p>
       <p class="wr-step-note">
-        The planned skill does not standardise the rules — their content differs every
-        time. It standardises the <em>questions</em>: every threshold rule gets asked
-        what happens at exactly N, every space conflict gets asked what may not be
-        sacrificed. Same questions, different answers.
+        The skill standardises the questions, not the answers. Every threshold gets
+        asked what happens at exactly N; every space conflict, what may not be
+        sacrificed.
       </p>
     </li>
 
@@ -105,18 +100,16 @@
       </div>
       <p>
         The rule becomes <strong>executable</strong>. A control panel drives it past its
-        own thresholds, so what is on screen is the rule working rather than one result
-        somebody picked.
+        own thresholds — what is on screen is the rule working, not one result somebody
+        picked.
       </p>
       <p>
-        Prototype, rule text and code snippet all come from the same file. Change the
-        threshold and all three change together — there is no second place to keep in
-        sync.
+        Prototype, rule text and snippet come from one file. Change the threshold and
+        all three follow.
       </p>
       <p class="wr-step-note">
-        Explicitly not production code. That was the failure mode last time: something
-        arrived looking like a delivery and was measured against production standards.
-        A holding room is not a treatment room.
+        Explicitly not production code. That was the failure last time: something
+        arrived looking like a delivery and was judged as one.
       </p>
     </li>
 
@@ -131,7 +124,7 @@
       </p>
       <p>
         Every “no, I'd still need…” is a line missing from the rule. That is the
-        measurement — the prototype is only the means.
+        measurement; the prototype is only the means.
       </p>
     </li>
 
@@ -143,12 +136,11 @@
       </div>
       <p>
         Answers become edge cases. Changes become entries in the change trail, with a
-        reason — not silent edits that make it look as though it had always been that
-        way.
+        reason — not silent edits that pretend it was always so.
       </p>
       <p class="wr-step-note">
-        Two of the three rules here already carry a second entry. Both changes were
-        found by working the prototype, not by reading anything.
+        Two of the three rules already carry a second entry. Both were found by working
+        the prototype, not by reading it.
       </p>
     </li>
 
@@ -159,9 +151,8 @@
         <span class="wr-status wr-status-theirs">their system</span>
       </div>
       <p>
-        Built in the real stack, from a rule with no gaps left in it. The code snippet
-        is framework-neutral on purpose — the decision, not the rendering, so it still
-        holds when the component library moves a major version.
+        Built in the real stack, from a rule with no gaps left. The snippet is
+        framework-neutral on purpose: the decision, not the rendering.
       </p>
     </li>
 
@@ -171,8 +162,8 @@
   <section class="wr-origin">
     <h2 class="wr-origin-title">Which artefact carries what</h2>
     <p class="wr-origin-lead">
-      Each of these exists because something would otherwise have to be decided again
-      every time. That, not typing speed, is where throughput comes from.
+      Each exists so something does not have to be decided twice. That, not typing
+      speed, is where throughput comes from.
     </p>
 
     <table class="wr-cond">
@@ -187,32 +178,30 @@
         </tr>
         <tr>
           <td>Figma component description<div class="wr-cond-label">at the component</div></td>
-          <td>The designer's intent, in a few sentences, without a change of tool.</td>
+          <td>The designer's intent, without a change of tool.</td>
           <td><span class="wr-status wr-status-built">in use</span></td>
         </tr>
         <tr>
           <td><code>design.md</code><div class="wr-cond-label">one level above the rules</div></td>
           <td>
-            What holds everywhere and must not be repeated per component: person names,
-            selection controls, missing data, “other needs a free text”. Plus the rule
-            types and their question lists.
+            What holds everywhere, so it is not repeated per component: names, selection
+            controls, missing data. Plus the rule types and their questions.
           </td>
           <td><span class="wr-status wr-status-planned">planned</span></td>
         </tr>
         <tr>
           <td>rules skill<div class="wr-cond-label">prose → rule</div></td>
           <td>
-            Same questions every time, same output format, same shape. Translates —
-            never authors. What the sources do not say becomes an open question.
+            Same questions, same format, every time. Translates — never authors.
           </td>
           <td><span class="wr-status wr-status-planned">planned</span></td>
         </tr>
         <tr>
           <td>check script<div class="wr-cond-label">runs on every change</div></td>
           <td>
-            All fields present, change trail non-empty, open questions not empty, and no
-            parameter value spelled out as a literal in prose — the drift that already
-            happened once here.
+            All fields present, change trail and open questions non-empty, and no
+            parameter spelled out as a literal in prose — the drift that already
+            happened here once.
           </td>
           <td><span class="wr-status wr-status-planned">planned</span></td>
         </tr>
@@ -225,10 +214,9 @@
     </table>
 
     <p class="wr-origin-foot">
-      The order matters: the check script first, because it makes consistency
-      measurable; <code>design.md</code> from what the script cannot check; the skill
-      last, because it needs both as its yardstick. Writing the skill first would
-      produce exactly the uneven quality it is meant to prevent.
+      In that order: the check script first, because it makes consistency measurable;
+      <code>design.md</code> from what the script cannot check; the skill last, because
+      it needs both as its yardstick.
     </p>
   </section>
 
@@ -238,18 +226,17 @@
     <ul class="wr-payoff">
       <li>
         <strong>Fewer questions back.</strong> Every edge case settled in advance is a
-        message not sent, and a wait not had.
+        message not sent and a wait not had.
       </li>
       <li>
         <strong>Fewer full rounds.</strong> A colour change is a token change. Where
-        component and design point at the same token, nothing needs rebuilding and
-        nobody needs to hand anything over.
+        component and design point at the same token, nothing is rebuilt and nothing is
+        handed over.
       </li>
       <li>
         <strong>Fewer decisions.</strong> Once “from five options on, a select” is
-        settled, component number forty inherits it. This is the one that compounds —
-        and the reason a <code>design.md</code> full of <em>decisions</em> is worth more
-        than one full of style guidance.
+        settled, component forty inherits it. This is the one that compounds — and why a
+        <code>design.md</code> of <em>decisions</em> beats one of style guidance.
       </li>
     </ul>
     <p class="wr-origin-foot">
@@ -258,10 +245,9 @@
   </section>
 
   <p class="wr-foot">
-    Everything on this page that is marked <em>planned</em> does not exist yet. The
-    three components under <a href="index.html">Components</a> do — including two rules
-    that changed within a day because working the prototype exposed something reading
-    it had not.
+    Anything marked <em>planned</em> does not exist yet. The three components under
+    <a href="index.html">Components</a> do — including two rules that changed within a
+    day, because working the prototype exposed what reading it had not.
   </p>
 
 </div>
