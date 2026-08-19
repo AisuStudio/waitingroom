@@ -111,8 +111,12 @@ variable is touched.
 Static files, no build. Serve the directory and open `index.html`:
 
 ```bash
-python3 -m http.server 8099
+python3 serve.py
 ```
+
+Caching is switched off deliberately: browsers hold on to ES modules, so an
+edited rule otherwise keeps rendering its previous text — a change that looks
+like it did not work when in fact it did.
 
 ## Data
 

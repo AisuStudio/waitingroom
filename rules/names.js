@@ -32,12 +32,11 @@ export const nameTruncation = {
   + 'abbreviation while a cut-off name reads as a complete one. That is why '
   + 'initials come before wrapping: they cost one glance, and wrapping costs '
   + 'the row height of the whole list.\n\n'
-  + 'The order of sacrifices follows what each one costs the reader. The '
-  + 'original-script form is a second rendering of a name already shown — '
-  + 'losing it costs least. An initial still identifies. A second line costs '
-  + 'no information at all, only space. When even that is not enough, the row '
-  + 'grows further rather than anything being hidden: a taller row is a '
-  + 'nuisance, a name nobody can match is a defect.',
+  + 'The rest of the order follows what each sacrifice costs the reader. The '
+  + 'original-script form is a second rendering of a name already shown, so '
+  + 'it goes first. A second line costs no information, only space, so it '
+  + 'goes last — a taller row is a nuisance; a name nobody can match is a '
+  + 'defect.',
 
   // The ladder, declared as data so the Rules tab can show it as a sequence
   // rather than as prose someone has to reconstruct.

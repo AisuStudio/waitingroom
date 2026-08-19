@@ -642,3 +642,66 @@ body {
    clicked into it is asking the same question as anyone who tabbed to it. */
 .wr-name-reveal:hover .wr-name-tip,
 .wr-name-reveal:focus .wr-name-tip { display: block; }
+
+/* ============================================================================
+   Rules tab — reading sizes
+   ----------------------------------------------------------------------------
+   This panel is the one part of the components page that is genuinely read
+   rather than scanned: a rationale is an argument, and an edge case has to be
+   understood before it can be built. It gets reading type even though the
+   surrounding page does not — the control panel and the prototype next to it
+   are interface, this is prose.
+   ========================================================================= */
+
+.wr-panel[data-panel='rules'] { padding: 24px 26px 26px; }
+
+.wr-panel[data-panel='rules'] p,
+.wr-panel[data-panel='rules'] li,
+.wr-panel[data-panel='rules'] dd {
+  font-size: 15.5px;
+  line-height: 1.62;
+  max-width: 58ch;
+}
+
+/* The rule itself, stated once. Large enough to be the thing you read first. */
+.wr-panel[data-panel='rules'] .wr-rule-statement {
+  font-size: 17.5px;
+  line-height: 1.5;
+  padding: 14px 16px;
+  margin-bottom: 26px;
+  max-width: 56ch;
+}
+
+.wr-rule-head { font-size: 17px; margin-bottom: 6px; }
+
+/* Section labels get air above them, so the panel reads as parts rather than
+   as one column of text. */
+.wr-rule-section { margin: 0 0 28px; }
+.wr-rule-section > h4 {
+  font-size: 11px;
+  letter-spacing: .09em;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Rationale often runs to several paragraphs — they need to be separable. */
+.wr-rule-section p + p { margin-top: 12px; }
+
+/* Edge cases: the term carries the case, the definition carries the handling.
+   Making the term stand out turns the list into something you can scan for
+   the one case you are looking for. */
+.wr-edge { padding: 12px 0; }
+.wr-edge dt { font-size: 15.5px; font-weight: 650; margin-bottom: 3px; }
+.wr-edge dd { color: var(--text-muted); }
+
+.wr-open li, .wr-payoff li { margin-bottom: 10px; }
+.wr-open { padding-left: 14px; }
+
+/* Provenance stays small: it is a record, consulted rather than read. */
+.wr-panel[data-panel='rules'] .wr-prov li { font-size: 13px; line-height: 1.5; max-width: 74ch; }
+
+/* Tables inside the panel keep their density — a conditions table is data. */
+.wr-panel[data-panel='rules'] .wr-cond td,
+.wr-panel[data-panel='rules'] .wr-cond th { font-size: 13px; }
+.wr-panel[data-panel='rules'] .wr-cond-base { font-size: 13.5px; max-width: 70ch; }

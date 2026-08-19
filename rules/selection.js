@@ -26,12 +26,12 @@ export const selectionControl = {
   // ---------------------------------------------------------------- WHY
   // The part that defends the control in an audit.
   rationale:
-    'Below the threshold every option is visible at once — the choice can be '
-  + 'taken in at a glance and made in a single click. Above it, full '
-  + 'visibility costs more vertical space than it returns in overview: the '
-  + 'list crowds out the context in which the decision is made. A select '
-  + 'trades visibility for compactness — a trade that only pays off once '
-  + 'visibility has stopped working at a glance anyway.',
+    'Below the threshold every option is visible at once: the choice is taken '
+  + 'in at a glance and made in one click. Above it, that visibility costs '
+  + 'more vertical space than it returns — the list crowds out the context in '
+  + 'which the decision is made.\n\n'
+  + 'A select trades visibility for compactness. That trade only pays off '
+  + 'once visibility has stopped working at a glance anyway.',
 
   // ------------------------------------------------------------ EDGE CASES
   // The part that saves the engineer a question.

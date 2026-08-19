@@ -7,9 +7,9 @@
 
 ## Rationale
 
-A form that shows everything at once asks people about circumstances that do not apply to them, and a form that shows things one at a time hides how long it is going to be. The compromise is to reveal only what follows from an answer already given.
+Showing everything at once asks people about circumstances that do not apply to them; showing one thing at a time hides how long the form is. The compromise is to reveal only what follows from an answer already given.
 
-The retention half matters more than the reveal half. Someone who picks "married", enters their partner, then corrects the entry to "single" has made a correction — not a request to delete data. Discarding it silently punishes the correction, and in a setting where the form is evidence, an unlogged deletion is worse than a redundant field.
+The retention half matters more. Someone who picks "married", enters their partner, then corrects the entry to "single" has made a correction — not a request to delete data. Discarding it silently punishes the correction, and where the form is evidence, an unlogged deletion is worse than a redundant field.
 
 ## Edge cases
 
