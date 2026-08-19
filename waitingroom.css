@@ -457,6 +457,27 @@ body {
 }
 .wr-code-note { color: var(--text-muted); font-size: 12px; margin: 0 0 10px; max-width: 68ch; }
 
+/* ---- Somewhere to start ----
+   Below the decision, never above it: the decision is what is being handed
+   over and holds across versions, this is one stack's way of calling it. */
+.wr-wiring {
+  margin: 22px 0 0; padding: 18px 0 0;
+  border-top: 1px solid var(--border);
+}
+.wr-wiring-title {
+  margin: 0 0 6px; font-size: 13px; font-weight: 700;
+}
+.wr-wiring-caveat {
+  margin: 0 0 16px; max-width: 70ch;
+  color: var(--text-muted); font-size: 12.5px; line-height: 1.5;
+}
+.wr-file {
+  margin: 14px 0 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11.5px; color: var(--text-muted);
+}
+.wr-file:first-of-type { margin-top: 0; }
+
 /* ---- The contract ----
    Above the snippet, because it is the part that answers "what do I do with
    this". The code below it is evidence; this is the handover. */

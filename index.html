@@ -101,6 +101,7 @@ import { renderAddressChange } from './components/address-change.js';
 import { renderWaitingList } from './components/waiting-list.js';
 import { applyStoredTheme, wireModeControl } from './theme.js';
 import { renderHeader } from './header.js';
+import { angularWiring } from './wiring/angular.js';
 
 applyStoredTheme();
 renderHeader(document.getElementById('site-header'));
@@ -460,15 +461,42 @@ function codeMarkup(rule, state = {}) {
   return `
     ${contractMarkup(rule)}
     <p class="wr-code-note">${note}</p>
+    ${codeBlock(snippet(rule, state))}
+    ${wiringMarkup(rule)}`;
+}
+
+/* Every snippet is copyable, so the block is one function rather than markup
+   repeated per call site. */
+function codeBlock(code, filename) {
+  const COPY = '<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>'
+             + '<path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>';
+  return `
+    ${filename ? `<p class="wr-file">${esc(filename)}</p>` : ''}
     <div class="wr-code-wrap">
-      <button class="wr-copy" type="button" data-copy aria-label="Copy this snippet">
+      <button class="wr-copy" type="button" data-copy
+              aria-label="Copy ${filename ? esc(filename) : 'this snippet'}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
              focusable="false">${COPY}</svg>
         <span>Copy</span>
       </button>
-      <pre class="wr-code"><code>${esc(snippet(rule, state))}</code></pre>
+      <pre class="wr-code"><code>${esc(code)}</code></pre>
     </div>`;
+}
+
+/* Somewhere to start, in the stack the rule is actually going into. Kept out
+   of rules/ on purpose: the rule is framework-neutral and stays that way, the
+   wiring is per-stack and disposable. A second stack gets a second file in
+   wiring/ and rules/ does not change. */
+function wiringMarkup(rule) {
+  const w = angularWiring[rule.id];
+  if (!w) return '';
+  return `
+    <section class="wr-wiring">
+      <h4 class="wr-wiring-title">Somewhere to start — Angular + PrimeNG</h4>
+      <p class="wr-wiring-caveat">${esc(w.caveat)}</p>
+      ${w.files.map((f) => codeBlock(f.code, f.name)).join('')}
+    </section>`;
 }
 
 /* One delegated listener rather than one per button: the code panel is
@@ -555,6 +583,10 @@ function snippet(rule, state = {}) {
   if (rule.conditions) {
     return [
       ...head,
+      // Handed over with the conditions, because the contract refers to them
+      // and the wiring imports them.
+      `const BASE_FIELDS = [${rule.baseFields.map((f) => `'${f}'`).join(', ')}];`,
+      '',
       'const CONDITIONS = [',
       ...rule.conditions.map((c) => [
         '  {',
