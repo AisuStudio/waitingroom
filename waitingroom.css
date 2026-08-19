@@ -176,7 +176,6 @@ body {
      and it does not reach 4.5:1 on any of the light greys — it is a fill
      colour, not a text colour. Same hue, one step darker. */
   --head-blue-link: var(--blue-11-deep);
-  --head-blue-fill: #0069e5;   /* frame: the pill that is not the current mode */
 }
 
 .wr-head { margin-bottom: 40px; }
@@ -253,25 +252,35 @@ body {
 .wr-mode { display: flex; gap: 11px; }
 .wr-mode-btn {
   appearance: none;
-  border: 1px solid var(--text);
+  /* 1.5px border on a 15.5px line keeps the pill at the frame's 18.5px while
+     carrying the heavier stroke. */
+  border: 1.5px solid var(--text);
   border-radius: 10px;
   background: transparent;
-  color: var(--text);
   font: inherit;
   font-size: 10px;
-  font-weight: 400;
-  line-height: 16.5px;
+  line-height: 15.5px;
   text-transform: uppercase;
   padding: 0 13px;
   cursor: pointer;
 }
-.wr-mode-btn[aria-pressed='false'] {
-  background: var(--head-blue-fill);
-  border-color: var(--head-blue-fill);
-  color: #fff;
+/* The mode in force: outlined in the text colour, bold. It is a label as much
+   as a control — pressing it changes nothing. */
+.wr-mode-btn[aria-pressed='true'] {
+  border-color: var(--text);
+  color: var(--text);
+  font-weight: 700;
 }
-.wr-mode-btn[aria-pressed='true'] { font-weight: 700; }
-.wr-mode-btn:hover { opacity: .85; }
+/* The other one: outlined and set in the link blue, because blue is what this
+   page uses to mean "you can press this". */
+.wr-mode-btn[aria-pressed='false'] {
+  border-color: var(--head-blue-link);
+  color: var(--head-blue-link);
+  font-weight: 400;
+}
+.wr-mode-btn[aria-pressed='false']:hover {
+  background: color-mix(in srgb, var(--head-blue-link) 10%, transparent);
+}
 
 /* ---- Page navigation ----
    Under the title rather than in a corner: with two pages the second is
@@ -298,24 +307,31 @@ body {
   gap: 8px;
   margin: 34px 0 0;
 }
+/* Same two states as the mode control, so one rule holds across the whole
+   page: outlined in the text colour and bold is where you are, blue is where
+   you can go. It reads on the navigation too — Components black, Workflow
+   blue. A filled chip here would have been a third convention. */
 .wr-level-chip {
-  border: 1.5px solid var(--border-strong);
+  border: 1.5px solid var(--head-blue-link);
   border-radius: 999px;
   background: transparent;
-  color: var(--text-muted);
+  color: var(--head-blue-link);
   padding: 5px 13px;
   font: inherit;
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: .06em;
   cursor: pointer;
 }
-.wr-level-chip:hover { color: var(--text); border-color: var(--text); }
+.wr-level-chip:hover {
+  background: color-mix(in srgb, var(--head-blue-link) 10%, transparent);
+}
 .wr-level-chip[aria-pressed='true'] {
-  background: var(--accent-text);
-  border-color: var(--accent-text);
-  color: var(--bg);
+  border-color: var(--text);
+  color: var(--text);
+  font-weight: 700;
+  background: transparent;
 }
 /* Set apart by size and weight, not by fading it: at 10px an opacity step
    drops below the contrast floor, and a count nobody can read is decoration. */
