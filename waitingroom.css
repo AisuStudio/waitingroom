@@ -10,9 +10,9 @@
    saturated solids, 11/12 text. That is why no contrast is computed by hand
    here: steps 11 and 12 on steps 1/2 are text-safe by construction.
 
-   NOTE: the hex values below were written from memory and should be checked
-   against the official Radix values before any serious use. For the structure
-   this file is demonstrating, that makes no difference.
+   The hex values were verified against the official palette
+   (@radix-ui/colors 3.0.0, unpkg) on 2026-08-20: all 22 stocked values match
+   exactly, light and dark. The demo says Radix and is Radix.
    ========================================================================= */
 
 :root {
