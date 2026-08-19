@@ -122,7 +122,7 @@ body {
   padding: 32px 24px 80px;
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 14px;
   line-height: 1.5;
 }
@@ -130,115 +130,113 @@ body {
 .wr-page { max-width: 860px; margin: 0 auto; }
 
 /* ============================================================================
-   Masthead
+   Masthead — built to "Waiting Room Header" (overgabe, node 7:83)
    ----------------------------------------------------------------------------
-   Rendered by header.js into both pages, so the two cannot disagree about it.
+   Metrics taken from the frame: 40px wordmark, 2px rule, 16px claim over two
+   lines, 16px navigation, 1px rule. Rendered by header.js into both pages, so
+   the two cannot disagree about it.
 
-   Flush left and asymmetric on purpose: bar, wordmark, subtitle, navigation
-   and every section below share one left edge. The rule across the top gives
-   that edge something to hang from — without it, text starting at the margin
-   reads as a default rather than as a placement.
+   The frame's black and white are read through the token layer instead of
+   being written in, which is what lets the same header hold in dark mode.
+   The two blues are the frame's own values.
    ========================================================================= */
 
-.wr-head { margin-bottom: 30px; }
-
-.wr-head-bar {
-  height: 5px;
-  background: var(--text);
-  margin-bottom: 14px;
+:root {
+  --head-blue-link: #0075ff;   /* frame: Workflow */
+  --head-blue-fill: #0069e5;   /* frame: the pill that is not the current mode */
 }
 
-.wr-head-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-}
+.wr-head { margin-bottom: 40px; }
+
+/* Not a flex row: wordmark and pills sit in one line box, so the pills can be
+   aligned to the wordmark's baseline rather than to the top of its line. */
+.wr-head-top { display: block; }
 
 .wr-wordmark {
-  display: block;
-  margin: 0 0 0 -0.035em;   /* optical: a heavy cap stem sits inside its own
-                               side bearing and would otherwise hang right of
-                               everything beneath it */
-  font-size: clamp(32px, 6vw, 50px);
-  line-height: 0.92;
-  font-weight: 800;
-  letter-spacing: -0.035em;
+  display: inline;
+  margin: 0;
+  font-size: clamp(30px, 4.6vw, 40px);
+  line-height: 1.175;
+  font-weight: 700;
   text-transform: uppercase;
   color: var(--text);
   text-decoration: none;
 }
-.wr-wordmark:hover { color: var(--accent-text); }
+.wr-wordmark:hover { color: var(--head-blue-link); }
+
+/* The frame's two rules: 2px under the wordmark, 1px under the navigation. */
+.wr-rule { height: 1px; background: var(--text); margin: 6px 0 0; }
+.wr-rule-heavy { height: 2px; margin: 8px 0 0; }
 
 .wr-subtitle {
-  color: var(--text-muted);
-  margin: 13px 0 0;
-  max-width: 64ch;
-  font-size: 15px;
-  line-height: 1.45;
+  margin: 11px 0 0;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.372;
+  text-transform: capitalize;   /* as in the frame: the text is written as a
+                                   sentence and cased by the style */
 }
+.wr-subtitle span { display: block; }
 
 /* ---- Colour mode ----
    Two named states rather than one button labelled with the other mode: the
    old control read "Dark" and it was not answerable, from looking at it,
-   whether that was the state or the action. */
-.wr-mode {
-  display: inline-flex;
-  flex: none;
-  border: 1px solid var(--border);
+   whether that was the state or the action.
+
+   The frame draws the current mode as an outlined bold pill and the other one
+   filled — so the filled pill is the one you press. */
+/* An inline-block with overflow:hidden has its baseline at its bottom margin
+   edge. That anchor is what puts the pills' underside exactly on the
+   wordmark's baseline — and it keeps holding when the wordmark scales down on
+   a narrow viewport, which a fixed offset would not. The zeroed font-size and
+   line-height remove the strut that would otherwise sit under the pills. */
+.wr-mode-anchor {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: baseline;
+  margin-left: 21px;
+  font-size: 0;
+  line-height: 0;
 }
+.wr-mode { display: flex; gap: 11px; }
 .wr-mode-btn {
   appearance: none;
-  border: 0;
+  border: 1px solid var(--text);
+  border-radius: 10px;
   background: transparent;
-  color: var(--text-muted);
+  color: var(--text);
   font: inherit;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 400;
+  line-height: 16.5px;
   text-transform: uppercase;
-  letter-spacing: .1em;
-  padding: 7px 11px;
+  padding: 0 13px;
   cursor: pointer;
 }
-.wr-mode-btn + .wr-mode-btn { border-left: 1px solid var(--border); }
-.wr-mode-btn:hover { color: var(--text); }
-.wr-mode-btn[aria-pressed='true'] { background: var(--text); color: var(--bg); }
+.wr-mode-btn[aria-pressed='false'] {
+  background: var(--head-blue-fill);
+  border-color: var(--head-blue-fill);
+  color: #fff;
+}
+.wr-mode-btn[aria-pressed='true'] { font-weight: 700; }
+.wr-mode-btn:hover { opacity: .85; }
 
 /* ---- Page navigation ----
    Under the title rather than in a corner: with two pages the second is
-   otherwise found by accident, and the flow page is half the argument.
-   The marker sits on the rule, so the current page hangs from it. */
-.wr-nav {
-  display: flex;
-  margin: 26px 0 0;
-  border-top: 1px solid var(--border-strong);
-}
+   otherwise found by accident, and the workflow page is half the argument.
+   As in the frame, the page being read is bold and black; the other reads as
+   the link it is. */
+.wr-nav { display: flex; flex-wrap: wrap; gap: 48px; margin: 31px 0 0; }
 .wr-nav-link {
-  display: flex;
-  align-items: baseline;
-  gap: 9px;
-  margin-top: -1px;
-  padding: 13px 26px 13px 0;
-  border-top: 3px solid transparent;
   text-decoration: none;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .1em;
+  color: var(--head-blue-link);
+  font-size: 16px;
+  font-weight: 400;
+  text-transform: capitalize;
 }
-.wr-nav-num {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .02em;
-  color: var(--text-muted);
-}
-.wr-nav-link:hover { color: var(--text); }
-.wr-nav-link[aria-current='page'] {
-  color: var(--text);
-  border-top-color: var(--accent-solid);
-}
-.wr-nav-link[aria-current='page'] .wr-nav-num { color: var(--accent-text); }
+.wr-nav-link:hover { text-decoration: underline; }
+.wr-nav-link[aria-current='page'] { color: var(--text); font-weight: 700; }
 
 /* ---- Level filter ----
    These two used to be inert labels. They now filter, which is the only
@@ -250,21 +248,22 @@ body {
   margin: 34px 0 0;
 }
 .wr-level-chip {
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border-strong);
+  border-radius: 999px;
   background: transparent;
   color: var(--text-muted);
-  padding: 6px 12px;
+  padding: 5px 13px;
   font: inherit;
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .09em;
+  letter-spacing: .06em;
   cursor: pointer;
 }
-.wr-level-chip:hover { color: var(--text); border-color: var(--border-strong); }
+.wr-level-chip:hover { color: var(--text); border-color: var(--text); }
 .wr-level-chip[aria-pressed='true'] {
-  background: var(--text);
-  border-color: var(--text);
+  background: var(--accent-text);
+  border-color: var(--accent-text);
   color: var(--bg);
 }
 /* Set apart by size and weight, not by fading it: at 10px an opacity step
@@ -310,18 +309,23 @@ body {
 
 /* ---- Control panel ---- */
 .wr-console {
+  display: grid;
+  gap: 16px;                      /* two controls stacked with no gap read as
+                                     one control with a stray second row */
   border: 1px dashed var(--border-strong);
   border-radius: 8px;
-  padding: 14px 16px;
+  padding: 15px 16px;
   margin-bottom: 20px;
   background: var(--bg);
 }
 .wr-console-title {
   font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
-  color: var(--text-muted); margin: 0 0 10px;
+  color: var(--text-muted); margin: 0;
 }
-.wr-control { display: flex; align-items: center; gap: 12px; }
-.wr-control label { font-size: 13px; min-width: 100px; }
+.wr-control { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+/* Direct child only: a choice item is itself a label, and the shared minimum
+   width was being applied to each option as well. */
+.wr-control > label { font-size: 13px; min-width: 108px; }
 .wr-control input[type='range'] { flex: 1; accent-color: var(--accent-solid); max-width: 320px; }
 .wr-control output {
   font-variant-numeric: tabular-nums; font-size: 13px; min-width: 2.5em;
@@ -424,17 +428,17 @@ body {
 
 .wr-component-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin: 30px 0 12px; }
 .wr-kind, .wr-level-tag {
-  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
-  padding: 3px 8px; white-space: nowrap;
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  padding: 3px 9px; border-radius: 999px; white-space: nowrap;
 }
 /* The rule type is the sharper of the two labels, so it carries the outline;
    the level is context and stays quiet. */
 .wr-kind {
-  color: var(--text-muted);
-  border: 1px solid var(--border);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
 }
 .wr-level-tag {
-  color: var(--text-muted);
+  color: var(--text);
   background: var(--surface-sunk);
 }
 
@@ -623,23 +627,30 @@ body {
 
 /* Status is stated everywhere, because a process diagram that does not
    distinguish what runs from what is intended reads as a promise. */
+/* Set in the text colour, not a lighter one. At 10px uppercase, muted grey on
+   white was reading as disabled — and these chips carry the one thing the flow
+   page has to be unambiguous about: what exists and what does not.
+   The states are told apart by border and fill, never by fading the label. */
 .wr-status {
-  font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+  font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
   border-radius: 999px; padding: 3px 9px; white-space: nowrap;
-  border: 1px solid var(--border); color: var(--text-muted);
+  border: 1px solid var(--border-strong); color: var(--text);
 }
 .wr-status-built   { border-color: var(--accent-border); color: var(--accent-text); background: var(--accent-bg); }
-.wr-status-planned { border-style: dashed; }
-.wr-status-manual  { border-style: dashed; }
-.wr-status-next    { border-color: var(--border-strong); }
-.wr-status-theirs  { opacity: .8; }
+.wr-status-planned { border-style: dashed; background: var(--surface-sunk); }
+.wr-status-manual  { border-style: dashed; background: var(--surface-sunk); }
+.wr-status-next    { border-color: var(--text); }
+.wr-status-theirs  { background: var(--surface-sunk); }
 
 .wr-payoff { margin: 0; padding-left: 20px; }
 .wr-payoff li { margin-bottom: 12px; max-width: 62ch; }
 
 
 /* ---- Strategy choice in the control panel ---- */
-.wr-choice { display: flex; gap: 14px; flex-wrap: wrap; }
+/* Two columns rather than one long line: four options side by side sit too
+   close to compare, and the rejected one loses the space its tag needs. */
+.wr-choice { display: grid; grid-template-columns: repeat(2, minmax(0, 210px)); gap: 9px 20px; }
+@media (max-width: 620px) { .wr-choice { grid-template-columns: 1fr; } }
 .wr-choice-item { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
 .wr-choice-item input { accent-color: var(--accent-solid); }
 .wr-choice-rejected span:first-of-type { color: var(--text-muted); }

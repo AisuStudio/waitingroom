@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>waitingroom — the flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap">
 <link rel="stylesheet" href="waitingroom.css">
 </head>
 <body class="wr-flow-page">
@@ -27,12 +30,14 @@
         <span class="wr-status wr-status-theirs">exists — their system</span>
       </div>
       <p>
-        States <strong>what must be possible</strong> — not how it looks. A spec that
-        prescribes the control is reaching into design.
+        States <strong>what is needed</strong>, as user stories and acceptance criteria
+        — not how it looks. A spec that prescribes the control is reaching into design.
       </p>
       <p class="wr-step-note">
-        So the behaviour is undefined here, and that is correct. It only becomes a
-        problem if nothing further down defines it either.
+        Acceptance criteria say when a story is done. They do not say how the control
+        behaves at its edges, and they are not meant to. So the behaviour is undefined
+        here, and that is correct — it only becomes a problem if nothing further down
+        defines it either.
       </p>
     </li>
 
@@ -47,12 +52,21 @@
         from the tokens.
       </p>
       <p>
-        The behaviour goes into the <strong>component description</strong>: a few
-        sentences, at the component, readable through the API.
+        And this is where the rule is written down: in the
+        <strong>component's own description field</strong>. What applies, what happens
+        in the awkward cases, which spec it comes from. A few sentences, typed at the
+        component by the person who decided it — no second tool, no second document to
+        keep in step.
+      </p>
+      <p>
+        The description is read back through the API, which is what makes it a
+        <strong>channel rather than a note</strong>: everything downstream starts from
+        the text the designer wrote, not from someone's reading of the screen.
       </p>
       <p class="wr-step-note">
-        Figma holds states, not rules. Two variants show both sides of a threshold —
-        they cannot say where it sits.
+        Figma itself holds states, not rules — two variants show both sides of a
+        threshold but cannot say where it sits. The description is where that sentence
+        goes, and it travels with the component when the component is reused.
       </p>
     </li>
 
