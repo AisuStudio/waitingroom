@@ -782,9 +782,9 @@ body {
 
 .wr-step-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
 .wr-step-head h2 { font-size: var(--t-read); margin: 0; }
-/* The German aside on the Storybook step. The page is English, its readers
-   are not — and the Schalter closes the metaphor the project is named after:
-   from the waiting room, a number gets called to a desk. */
+/* The aside on the Storybook step. It closes the metaphor the project is
+   named after — from the waiting room, a number gets called to a desk — and
+   it uses the word the waiting list's own column header already uses. */
 .wr-step-alias { font-weight: 400; color: var(--text-muted); }
 .wr-step p { margin: 0 0 10px; max-width: 62ch; }
 .wr-step p.wr-step-note {
