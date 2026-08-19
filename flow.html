@@ -134,6 +134,26 @@
         </p>
       </li>
 
+      <li class="wr-step">
+        <div class="wr-step-head">
+          <span class="wr-step-num">8</span>
+          <h2>Storybook</h2>
+          <span class="wr-status wr-status-theirs">exists — their system</span>
+        </div>
+        <p>
+          Where engineering already picks components up. <strong>The rule's edge cases
+          are the story list</strong> — one story per case, so what was a paragraph
+          becomes a check that runs. The a11y addon turns “is this readable” into a
+          test result rather than an opinion.
+        </p>
+        <p class="wr-step-note">
+          Not a competitor to step 4, which is the obvious objection. The waitingroom
+          runs the rule <em>before</em> the component exists; Storybook shows the
+          component once it does. A rule that first appears here arrives after every
+          decision it was supposed to inform.
+        </p>
+      </li>
+
     </ol>
 
     <!-- -------------------------------------------------------- artefacts -->
@@ -177,6 +197,11 @@
             <td><code>docs/*.md</code><div class="wr-cond-label">generated</div></td>
             <td>The linkable, archivable form of a rule. Output, never source.</td>
             <td><span class="wr-status wr-status-built">built</span></td>
+          </tr>
+          <tr>
+            <td>Storybook stories<div class="wr-cond-label">one per edge case</div></td>
+            <td>The rule after it is built — where an edge case stops being a sentence and becomes a test that fails.</td>
+            <td><span class="wr-status wr-status-theirs">their system</span></td>
           </tr>
         </tbody>
       </table>
