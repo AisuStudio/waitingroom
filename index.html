@@ -11,77 +11,80 @@
 
   <header id="site-header"></header>
 
-  <div id="levels"></div>
+  <main class="wr-canvas">
 
-  <div id="components"></div>
+    <div id="levels"></div>
 
-  <!-- ----------------------------------------- Where the rules sit in Figma -->
-  <section class="wr-origin">
-    <h2 class="wr-origin-title">Where the rules sit in Figma</h2>
-    <p class="wr-origin-lead">
-      The designer states the behaviour in the component's own description — a few
-      sentences, at the component, without leaving the tool they are already in. It
-      travels with the component and is readable through the API, which is what makes
-      it a channel rather than a note.
-    </p>
+    <div id="components"></div>
 
-    <div class="wr-origin-split">
-      <div>
-        <figure class="wr-origin-figure">
-          <img src="assets/figma-description-panel.png"
-               alt="Figma with the Purpose selection component on the canvas and the component configuration panel open beside it, the behaviour typed into the description field."
-               onerror="this.closest('figure').remove()">
-          <figcaption>
-            Where it is written: the component's own description field. Nothing is added
-            to the file, nothing is kept alongside it — the behaviour lives on the
-            component. (Interface in German; the description is the part that matters.)
-          </figcaption>
-        </figure>
+    <!-- ----------------------------------------- Where the rules sit in Figma -->
+    <section class="wr-origin">
+      <h2 class="wr-origin-title">Where the rules sit in Figma</h2>
+      <p class="wr-origin-lead">
+        The designer states the behaviour in the component's own description — a few
+        sentences, at the component, without leaving the tool they are already in. It
+        travels with the component and is readable through the API, which is what makes
+        it a channel rather than a note.
+      </p>
 
-        <figure class="wr-origin-figure wr-origin-figure-second">
-          <img src="assets/purpose-selection-figma.png"
-               alt="The Purpose selection component set, showing its two variants side by side: a radio group with three options, and a select."
-               onerror="this.closest('figure').remove()">
-          <figcaption>
-            The two variants show what it looks like either side of the threshold — but
-            not where the threshold sits.
-          </figcaption>
-        </figure>
+      <div class="wr-origin-split">
+        <div>
+          <figure class="wr-origin-figure">
+            <img src="assets/figma-description-panel.png"
+                 alt="Figma with the Purpose selection component on the canvas and the component configuration panel open beside it, the behaviour typed into the description field."
+                 onerror="this.closest('figure').remove()">
+            <figcaption>
+              Where it is written: the component's own description field. Nothing is added
+              to the file, nothing is kept alongside it — the behaviour lives on the
+              component. (Interface in German; the description is the part that matters.)
+            </figcaption>
+          </figure>
+
+          <figure class="wr-origin-figure wr-origin-figure-second">
+            <img src="assets/purpose-selection-figma.png"
+                 alt="The Purpose selection component set, showing its two variants side by side: a radio group with three options, and a select."
+                 onerror="this.closest('figure').remove()">
+            <figcaption>
+              The two variants show what it looks like either side of the threshold — but
+              not where the threshold sits.
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="wr-origin-desc">
+          <p class="wr-origin-caption">Component description, read back from Figma</p>
+          <pre class="wr-origin-quote">BEHAVIOUR
+  Up to 4 options: radio group — every option visible at once.
+  From 5 options on: select — the list would otherwise crowd out the context.
+  Exactly one option: shown as a set value, not as a choice.
+  No options: the field is not rendered.
+
+  Spec: WR-104
+  Rule: waitingroom → Purpose selection → Rules</pre>
+          <p class="wr-origin-caption wr-origin-caption-foot">
+            Same text, fetched through the API — which is what makes the description a
+            channel rather than a note.
+          </p>
+        </div>
       </div>
 
-      <div class="wr-origin-desc">
-        <p class="wr-origin-caption">Component description, read back from Figma</p>
-        <pre class="wr-origin-quote">BEHAVIOUR
-Up to 4 options: radio group — every option visible at once.
-From 5 options on: select — the list would otherwise crowd out the context.
-Exactly one option: shown as a set value, not as a choice.
-No options: the field is not rendered.
+      <p class="wr-origin-foot">
+        What it deliberately is <em>not</em>: a full specification. Where the threshold
+        sits, what happens while options are still loading, whether one is preselected —
+        those get settled here, where they can be executed and checked. Figma states the
+        intent; this page states what happens in every case.
+      </p>
+    </section>
 
-Spec: WR-104
-Rule: waitingroom → Purpose selection → Rules</pre>
-        <p class="wr-origin-caption wr-origin-caption-foot">
-          Same text, fetched through the API — which is what makes the description a
-          channel rather than a note.
-        </p>
-      </div>
-    </div>
-
-    <p class="wr-origin-foot">
-      What it deliberately is <em>not</em>: a full specification. Where the threshold
-      sits, what happens while options are still loading, whether one is preselected —
-      those get settled here, where they can be executed and checked. Figma states the
-      intent; this page states what happens in every case.
+    <p class="wr-foot">
+      Each component's three views come from a single file in <code>rules/</code>.
+      Change a threshold or a condition there and the prototype, the rule text and the
+      code change together. There is no second place to keep in sync. All sample data is
+      synthetic — an invented citizen registration office, with no connection to any real
+      case or person.
     </p>
-  </section>
 
-  <p class="wr-foot">
-    Each component's three views come from a single file in <code>rules/</code>.
-    Change a threshold or a condition there and the prototype, the rule text and the
-    code change together. There is no second place to keep in sync. All sample data is
-    synthetic — an invented citizen registration office, with no connection to any real
-    case or person.
-  </p>
-
+  </main>
 
   <p class="wr-signature">
     <strong>Handover concept</strong>

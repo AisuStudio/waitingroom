@@ -49,7 +49,8 @@
      Only this tier is repointed when the mode changes. Components never
      reach for a primitive — that would defeat the swap the whole structure
      exists to make possible. */
-  --bg:            var(--slate-1);
+  --ground:        var(--slate-6);   /* what the sheet lies on */
+  --bg:            var(--slate-1);   /* the sheet the work sits on */
   --surface:       var(--slate-2);
   --surface-sunk:  var(--slate-3);
   --border:        var(--slate-7);
@@ -100,6 +101,11 @@
 /* Dark mode: ONLY the semantic tier repoints.
    No primitive changes, no component variable is touched. */
 :root[data-theme='dark'] {
+  /* The ground is repointed rather than inherited: in light the sheet is the
+     brighter of the two, in dark it is the darker one, and only the semantic
+     tier knows that. */
+  --ground: var(--slate-3);
+
   --slate-1:  #111113;  --slate-2:  #18191b;  --slate-3:  #212225;
   --slate-4:  #272a2d;  --slate-5:  #2e3135;  --slate-6:  #363a3f;
   --slate-7:  #43484e;  --slate-8:  #5a6169;  --slate-9:  #696e77;
@@ -119,8 +125,8 @@
 
 body {
   margin: 0;
-  padding: 32px 24px 80px;
-  background: var(--bg);
+  padding: 32px 24px 60px;
+  background: var(--ground);
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-size: 14px;
@@ -152,6 +158,21 @@ body {
 }
 
 .wr-head { margin-bottom: 40px; }
+
+/* The frame puts the masthead on the grey ground and the work on a white
+   sheet below it, inset a little from the rules above. The separation is the
+   point: the header states what this is, the sheet is what it does. */
+.wr-canvas {
+  display: block;
+  margin: 0 10px;
+  padding: 30px 26px 34px;
+  background: var(--bg);
+}
+@media (max-width: 620px) { .wr-canvas { margin: 0; padding: 22px 16px 26px; } }
+
+/* Outside the sheet, on the ground — it signs the work rather than being part
+   of it. */
+.wr-page > .wr-signature { margin: 26px 10px 0; padding-top: 14px; border-top-color: var(--border-strong); }
 
 /* Not a flex row: wordmark and pills sit in one line box, so the pills can be
    aligned to the wordmark's baseline rather than to the top of its line. */
@@ -701,7 +722,21 @@ body {
 .wr-flow-page .wr-origin-title        { font-size: 19px; margin-bottom: 10px; }
 .wr-flow-page .wr-origin-foot         { font-size: 15px; line-height: 1.55; }
 .wr-flow-page .wr-page-heading        { font-size: 21px; }
-.wr-flow-page .wr-cond td             { padding: 10px 12px 10px 0; line-height: 1.5; }
+/* The table was still at workbench size while the prose around it had moved to
+   reading size, which made it look like small print appended to the argument.
+   It carries the argument. */
+.wr-flow-page .wr-cond                { font-size: 15px; }
+.wr-flow-page .wr-cond th             { font-size: 11px; padding-bottom: 8px; }
+.wr-flow-page .wr-cond td             { padding: 13px 14px 13px 0; line-height: 1.5; }
+.wr-flow-page .wr-cond-label          { font-size: 13.5px; margin-top: 3px; }
+.wr-flow-page .wr-cond code           { font-size: 14px; }
+.wr-flow-page .wr-status              { font-size: 11px; padding: 4px 10px; }
+/* The artefact names are the row's handle and should not wrap to three lines
+   while the status column holds a chip and empty space. */
+.wr-flow-page .wr-cond th:first-child,
+.wr-flow-page .wr-cond td:first-child { width: 27%; }
+.wr-flow-page .wr-cond th:last-child,
+.wr-flow-page .wr-cond td:last-child  { width: 1%; white-space: nowrap; }
 
 /* ---- Signature ---- */
 .wr-signature {
