@@ -520,3 +520,5 @@ a.wr-theme-toggle { text-decoration: none; display: inline-block; }
 }
 .wr-edge-rejected dt { color: var(--text-muted); }
 .wr-edge dt .wr-status { margin-left: 6px; vertical-align: middle; }
+.wr-origin-figure-second { margin-top: 16px; }
+.wr-origin-caption-foot { margin: 8px 0 0; text-transform: none; letter-spacing: 0; font-size: 11.5px; }

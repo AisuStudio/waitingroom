@@ -41,13 +41,26 @@
     </p>
 
     <div class="wr-origin-split">
-      <figure class="wr-origin-figure">
-        <img src="assets/purpose-selection-figma.png"
-             alt="The Purpose selection component set in Figma, showing its two variants side by side: a radio group with three options, and a select.">
-        <figcaption>
-          The two variants show what it looks like either side of the threshold.
-        </figcaption>
-      </figure>
+      <div>
+        <figure class="wr-origin-figure">
+          <img src="assets/purpose-selection-figma.png"
+               alt="The Purpose selection component set in Figma, showing its two variants side by side: a radio group with three options, and a select.">
+          <figcaption>
+            The two variants show what it looks like either side of the threshold.
+          </figcaption>
+        </figure>
+
+        <!-- The panel shot is optional: if the file is not there, the figure
+             removes itself rather than leaving a broken image. -->
+        <figure class="wr-origin-figure wr-origin-figure-second">
+          <img src="assets/figma-description-panel.png"
+               alt="Figma's component configuration panel, with the behaviour written into the description field."
+               onerror="this.closest('figure').remove()">
+          <figcaption>
+            Where the designer writes it: the component's own description field.
+          </figcaption>
+        </figure>
+      </div>
 
       <div class="wr-origin-desc">
         <p class="wr-origin-caption">Component description, read back from Figma</p>
@@ -59,6 +72,10 @@ No options: the field is not rendered.
 
 Spec: WR-104
 Rule: waitingroom → Purpose selection → Rules</pre>
+        <p class="wr-origin-caption wr-origin-caption-foot">
+          Same text, fetched through the API — which is what makes the description a
+          channel rather than a note.
+        </p>
       </div>
     </div>
 
