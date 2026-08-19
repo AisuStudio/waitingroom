@@ -160,19 +160,20 @@ body {
 .wr-head { margin-bottom: 40px; }
 
 /* The frame puts the masthead on the grey ground and the work on a white
-   sheet below it, inset a little from the rules above. The separation is the
-   point: the header states what this is, the sheet is what it does. */
+   sheet below it. The separation is the point: the header states what this is,
+   the sheet is what it does. Same width as the rules above, so the page has
+   one left edge rather than two. */
 .wr-canvas {
   display: block;
-  margin: 0 10px;
+  margin: 0;
   padding: 30px 26px 34px;
   background: var(--bg);
 }
-@media (max-width: 620px) { .wr-canvas { margin: 0; padding: 22px 16px 26px; } }
+@media (max-width: 620px) { .wr-canvas { padding: 22px 16px 26px; } }
 
 /* Outside the sheet, on the ground — it signs the work rather than being part
    of it. */
-.wr-page > .wr-signature { margin: 26px 10px 0; padding-top: 14px; border-top-color: var(--border-strong); }
+.wr-page > .wr-signature { margin: 26px 0 0; padding-top: 14px; border-top-color: var(--border-strong); }
 
 /* Not a flex row: wordmark and pills sit in one line box, so the pills can be
    aligned to the wordmark's baseline rather than to the top of its line. */
