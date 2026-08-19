@@ -130,7 +130,11 @@ body {
 .wr-page { max-width: 860px; margin: 0 auto; }
 
 .wr-topbar { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.wr-title { font-size: 22px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+.wr-title {
+  font-size: 34px; font-weight: 650; margin: 0;
+  letter-spacing: -0.02em; line-height: 1.1;
+}
+@media (max-width: 560px) { .wr-title { font-size: 27px; } }
 .wr-subtitle { color: var(--text-muted); margin: 4px 0 0; max-width: 62ch; }
 
 .wr-theme-toggle {
@@ -499,9 +503,6 @@ body {
 .wr-payoff { margin: 0; padding-left: 20px; }
 .wr-payoff li { margin-bottom: 10px; max-width: 70ch; }
 
-/* The link back sits where the theme toggle does on the other page. */
-a.wr-theme-toggle { text-decoration: none; display: inline-block; }
-.wr-topbar-actions { display: flex; gap: 8px; align-items: center; }
 
 /* ---- Strategy choice in the control panel ---- */
 .wr-choice { display: flex; gap: 14px; flex-wrap: wrap; }
@@ -522,3 +523,28 @@ a.wr-theme-toggle { text-decoration: none; display: inline-block; }
 .wr-edge dt .wr-status { margin-left: 6px; vertical-align: middle; }
 .wr-origin-figure-second { margin-top: 16px; }
 .wr-origin-caption-foot { margin: 8px 0 0; text-transform: none; letter-spacing: 0; font-size: 11.5px; }
+
+
+/* ---- Page navigation ----
+   Sits under the title rather than in the corner: with two pages the second
+   one is otherwise found by accident, and the flow page is half the argument. */
+.wr-nav {
+  display: flex; gap: 4px;
+  margin: 18px 0 0;
+  border-bottom: 1px solid var(--border);
+}
+.wr-nav a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 13px; font-weight: 600;
+  padding: 9px 14px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.wr-nav a:hover { color: var(--text); }
+.wr-nav a[aria-current='page'] {
+  color: var(--text);
+  border-bottom-color: var(--accent-solid);
+}
+.wr-page-heading { font-size: 19px; margin: 28px 0 6px; }
+.wr-page-lead { color: var(--text-muted); margin: 0; max-width: 70ch; }
