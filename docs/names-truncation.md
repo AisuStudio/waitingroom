@@ -39,6 +39,18 @@ It is treated as the family name and never abbreviated. Mononyms are recorded in
 
 It wraps at spaces and hyphens and the row grows taller. It is never cut off at the end and never hidden behind a scroll or a fade — both of those make an incomplete name look complete, which is the one outcome the rule exists to prevent.
 
+### The full name is revealed on hover
+
+The reveal must also open on keyboard focus, and the cell has to be reachable by keyboard for that to mean anything. It is an addition to a name that already identifies on its own — never the only place the full name exists.
+
+### The same list on a touch screen
+
+There is no hover. Either the reveal opens on tap, or the abbreviation has to carry the row by itself. A rule that assumes a pointing device stops being a rule on half the devices it runs on.
+
+### The list is printed
+
+Nothing can be revealed on paper. A printed list uses the wrapping form, not the abbreviated one, whatever the screen shows.
+
 ### A single name part is wider than the column with nowhere to wrap
 
 It overflows visibly and the column has to be widened. This is a layout defect to be fixed, not a case to be handled by hiding part of the name.
@@ -51,7 +63,8 @@ recorded so they can be answered rather than quietly assumed.
 - The rule assumes every name splits into given and family parts. That assumption does not hold everywhere — in several South Indian naming systems the first element is a place or a father's name and is itself the part conventionally abbreviated, which inverts the ladder. Who decides how a record is split, and what happens when the register's split is wrong?
 - Is the original-script form shown at all in a list view, or only on the detail screen? Dropping it first assumes it is supplementary — that is a decision, not a fact.
 - At what column width does the two-line form stop being acceptable and the column has to be widened instead?
-- Is a shortened name ever printed on a document, or only shown on screen? On paper there is no hover to reveal the full name.
+- Does the desk terminal have a pointing device at all, and is the list ever used on a touch screen? The reveal strategy stands or falls on it.
+- If a reveal exists on screen, does anything downstream assume the reader saw it — a printed slip, an export, a handover to another desk?
 
 ## Options considered
 
@@ -70,6 +83,14 @@ Cheapest to implement and the reason this is worth showing: "Subramanian" become
 Abbreviate given names to initials; never touch the family name.
 
 An initial is read as an abbreviation, so the reader knows something was left out and knows exactly what. "K. Schmidt-Wollenweber" can be matched against a document; a trimmed name cannot. Stays on one line, so the row height of the list is unaffected.
+
+### Initial + reveal on hover — conditional
+
+Abbreviate as above, and make the full name available on hover and focus.
+
+The abbreviation identifies; the reveal removes the last doubt without costing a single pixel of layout. On a desk terminal with a mouse that is close to free.
+
+It is marked conditional rather than chosen because a reveal is an addition, never a replacement. The moment the full name exists only on hover, it does not exist for anyone on a touch screen, on paper, or reading down the list with a keyboard. What is printed on the screen has to stand on its own; the reveal is a convenience on top.
 
 ### More lines — chosen — fallback
 
@@ -94,6 +115,7 @@ Tried in order; the first rung that fits wins.
 |---|---|---|---|
 | 2026-08-19 | Rule created — ladder of sacrifices, family name out of bounds | Example — the deciding person would be named here | Synthetic example, tested against names from several naming systems |
 | 2026-08-19 | Truncation at the end removed from the ladder entirely; initials-plus-wrap added as a rung; the last rung now wraps instead of scrolling behind a fade | Found while working the prototype | The implementation faded the overflowing cell, which looks exactly like the cut-off name the rule forbids. An initial is read as an abbreviation; a cut-off name is read as complete. |
+| 2026-08-19 | Fourth option added: initial plus reveal on hover and focus, marked conditional rather than chosen | Proposed while working the prototype | A reveal removes the last doubt at no layout cost, but only where there is a pointer. Recorded with the conditions rather than as a free improvement. |
 
 ## Logic
 

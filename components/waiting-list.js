@@ -68,9 +68,25 @@ export function renderWaitingList(container, columnWidth, strategyKey = rule.cho
     if (result.line2) {
       nameCell.append(el('span', 'wr-name-line wr-name-line2', result.line2));
     }
-    // The full name stays reachable whatever the column does with it.
-    nameCell.title = [row.name.given.join(' '), row.name.family].filter(Boolean).join(' ')
+
+    const fullName = [row.name.given.join(' '), row.name.family].filter(Boolean).join(' ')
       + (row.name.original ? ` (${row.name.original})` : '');
+
+    if (result.reveal) {
+      // Focusable, so the reveal is not limited to people using a mouse — the
+      // single most common way this pattern is built wrong. The tooltip is a
+      // real element rather than the title attribute: title does not open on
+      // keyboard focus and is announced inconsistently.
+      nameCell.classList.add('wr-name-reveal');
+      nameCell.tabIndex = 0;
+      nameCell.setAttribute('role', 'button');
+      nameCell.setAttribute('aria-label', `${result.line1} — full name: ${fullName}`);
+      nameCell.append(el('span', 'wr-name-tip', fullName));
+    } else {
+      // Still reachable, just not advertised: the rendered name already
+      // identifies on its own at these rungs.
+      nameCell.title = fullName;
+    }
 
     tr.append(
       nameCell,

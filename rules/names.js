@@ -91,6 +91,26 @@ export const nameTruncation = {
               + 'prevent.',
     },
     {
+      case: 'The full name is revealed on hover',
+      handling: 'The reveal must also open on keyboard focus, and the cell has '
+              + 'to be reachable by keyboard for that to mean anything. It is '
+              + 'an addition to a name that already identifies on its own — '
+              + 'never the only place the full name exists.',
+    },
+    {
+      case: 'The same list on a touch screen',
+      handling: 'There is no hover. Either the reveal opens on tap, or the '
+              + 'abbreviation has to carry the row by itself. A rule that '
+              + 'assumes a pointing device stops being a rule on half the '
+              + 'devices it runs on.',
+    },
+    {
+      case: 'The list is printed',
+      handling: 'Nothing can be revealed on paper. A printed list uses the '
+              + 'wrapping form, not the abbreviated one, whatever the screen '
+              + 'shows.',
+    },
+    {
       case: 'A single name part is wider than the column with nowhere to wrap',
       handling: 'It overflows visibly and the column has to be widened. This '
               + 'is a layout defect to be fixed, not a case to be handled by '
@@ -116,6 +136,15 @@ export const nameTruncation = {
            + 'exactly like the cut-off name the rule forbids. An initial is '
            + 'read as an abbreviation; a cut-off name is read as complete.',
     },
+    {
+      date: '2026-08-19',
+      change: 'Fourth option added: initial plus reveal on hover and focus, '
+            + 'marked conditional rather than chosen',
+      by: 'Proposed while working the prototype',
+      basis: 'A reveal removes the last doubt at no layout cost, but only '
+           + 'where there is a pointer. Recorded with the conditions rather '
+           + 'than as a free improvement.',
+    },
   ],
 
   // ------------------------------------------------- WHAT IS NOT SETTLED
@@ -131,8 +160,10 @@ export const nameTruncation = {
   + 'decision, not a fact.',
     'At what column width does the two-line form stop being acceptable and '
   + 'the column has to be widened instead?',
-    'Is a shortened name ever printed on a document, or only shown on screen? '
-  + 'On paper there is no hover to reveal the full name.',
+    'Does the desk terminal have a pointing device at all, and is the list '
+  + 'ever used on a touch screen? The reveal strategy stands or falls on it.',
+    'If a reveal exists on screen, does anything downstream assume the reader '
+  + 'saw it — a printed slip, an export, a handover to another desk?',
   ],
 
   // ------------------------------------------------- THE ALTERNATIVES
@@ -197,6 +228,29 @@ export const nameTruncation = {
         }
         // Even the family name is too wide on its own. Nothing is cut.
         return { step: 'wrap', line1: initials || null, line2: name.family, original: false };
+      },
+    },
+
+    initialsHover: {
+      label: 'Initial + reveal on hover',
+      status: 'conditional',
+      short: 'Abbreviate as above, and make the full name available on hover and focus.',
+      why:
+        'The abbreviation identifies; the reveal removes the last doubt without '
+      + 'costing a single pixel of layout. On a desk terminal with a mouse '
+      + 'that is close to free.\n\n'
+      + 'It is marked conditional rather than chosen because a reveal is an '
+      + 'addition, never a replacement. The moment the full name exists only '
+      + 'on hover, it does not exist for anyone on a touch screen, on paper, '
+      + 'or reading down the list with a keyboard. What is printed on the '
+      + 'screen has to stand on its own; the reveal is a convenience on top.',
+      apply(name, availableWidth, measure) {
+        // Same decision as `initials` — the reveal changes nothing about what
+        // is rendered, only what is reachable. Sharing the logic keeps the two
+        // from drifting apart.
+        const base = nameTruncation.strategies.initials.apply(name, availableWidth, measure);
+        const shortened = base.step !== 'full';
+        return { ...base, reveal: shortened };
       },
     },
 

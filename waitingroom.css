@@ -621,3 +621,24 @@ body {
 .wr-flow-page .wr-note p,
 .wr-flow-page .wr-note-caution li { font-size: 16px; line-height: 1.55; }
 .wr-flow-page .wr-note-lead { font-size: 16px; line-height: 1.55; }
+
+/* ---- Reveal on hover and focus ----
+   Marked with a dotted underline so it is visible that something is hidden;
+   an abbreviation nobody knows can be expanded is just an abbreviation. */
+.wr-name-reveal { position: relative; cursor: help; }
+.wr-name-reveal .wr-name-line { border-bottom: 1px dotted var(--border-strong); }
+.wr-name-reveal:focus-visible { outline: 2px solid var(--accent-solid); outline-offset: 2px; border-radius: 3px; }
+
+.wr-name-tip {
+  position: absolute; left: 0; top: calc(100% + 6px); z-index: 5;
+  display: none; width: max-content; max-width: 280px;
+  background: var(--code-bg); color: var(--code-text);
+  border-radius: 6px; padding: 6px 9px;
+  font-size: 12.5px; line-height: 1.45;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+}
+/* :focus, not :focus-visible — the ring is only wanted for keyboard users,
+   but the tooltip is wanted whenever the cell has focus at all. Anyone who
+   clicked into it is asking the same question as anyone who tabbed to it. */
+.wr-name-reveal:hover .wr-name-tip,
+.wr-name-reveal:focus .wr-name-tip { display: block; }
