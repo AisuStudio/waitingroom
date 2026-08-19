@@ -128,6 +128,24 @@
 }
 
 /* ============================================================================
+   Type scale
+   ----------------------------------------------------------------------------
+   Seven steps, because the file had nineteen sizes and not one of them had a
+   reason — 12.5px was picked as "smaller than the body text" and nothing more.
+   Every size below is one of these; a literal px font-size anywhere else is a
+   bug, and greppable as one.
+   ========================================================================= */
+
+:root {
+  --t-micro: 11px;   /* uppercase labels: chips, status, table heads */
+  --t-dense: 13px;   /* dense data: code, monospace, table cells at the bench */
+  --t-body:  14px;   /* body and explanatory text — the default */
+  --t-read:  16px;   /* reading prose, navigation, the claim */
+  --t-sub:   18px;   /* component names, sub-headings */
+  --t-head:  21px;   /* page headings */
+}
+
+/* ============================================================================
    Workbench
    ========================================================================= */
 
@@ -148,7 +166,7 @@ body {
   background: var(--ground);
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 14px;
+  font-size: var(--t-body);
   line-height: 1.5;
 }
 
@@ -192,6 +210,11 @@ body {
 }
 @media (max-width: 620px) { .wr-canvas { padding: 22px 16px 26px; } }
 
+/* Links in running text. Left alone they fall back to the browser's fixed
+   blue, which measures 2:1 on the dark ground — the one place a default is
+   worse than no styling at all. Classed links keep their own colour. */
+.wr-canvas a:not([class]) { color: var(--head-blue-link); }
+
 /* Outside the sheet, on the ground — it signs the work rather than being part
    of it. */
 /* On the ground, not on the sheet: --text-muted measures 4.23:1 there. The
@@ -221,7 +244,7 @@ body {
 .wr-subtitle {
   margin: 11px 0 0;
   color: var(--text);
-  font-size: 16px;
+  font-size: var(--t-read);
   font-weight: 700;
   line-height: 1.372;
   text-transform: capitalize;   /* as in the frame: the text is written as a
@@ -258,7 +281,7 @@ body {
   border-radius: 10px;
   background: transparent;
   font: inherit;
-  font-size: 10px;
+  font-size: var(--t-micro);
   line-height: 15.5px;
   text-transform: uppercase;
   padding: 0 13px;
@@ -291,7 +314,7 @@ body {
 .wr-nav-link {
   text-decoration: none;
   color: var(--head-blue-link);
-  font-size: 16px;
+  font-size: var(--t-read);
   font-weight: 400;
   text-transform: capitalize;
 }
@@ -318,7 +341,7 @@ body {
   color: var(--head-blue-link);
   padding: 5px 13px;
   font: inherit;
-  font-size: 10.5px;
+  font-size: var(--t-micro);
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: .06em;
@@ -340,18 +363,18 @@ body {
   margin: 12px 0 0;
   max-width: 68ch;
   color: var(--text-muted);
-  font-size: 12.5px;
+  font-size: var(--t-body);
   line-height: 1.5;
 }
 
-.wr-component-name { font-size: 17px; font-weight: 600; margin: 24px 0 10px; }
+.wr-component-name { font-size: var(--t-sub); font-weight: 600; margin: 24px 0 10px; }
 
 /* ---- Tabs ---- */
 .wr-tabbar { display: flex; align-items: flex-end; gap: 4px; border-bottom: 1px solid var(--panel-border); }
 .wr-tab {
   border: none; background: transparent;
   color: var(--tab-text);
-  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em;
+  font-size: var(--t-micro); font-weight: 600; text-transform: uppercase; letter-spacing: .05em;
   padding: 10px 16px; cursor: pointer;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
@@ -359,7 +382,7 @@ body {
 .wr-tab[aria-selected='true'] { color: var(--tab-text-active); border-bottom-color: var(--tab-border-active); }
 .wr-links { margin-left: auto; align-self: center; display: flex; gap: 14px; }
 .wr-ext-link {
-  color: var(--accent-text); font-size: 11px; font-weight: 600;
+  color: var(--accent-text); font-size: var(--t-micro); font-weight: 600;
   text-transform: uppercase; letter-spacing: .05em; text-decoration: none;
 }
 .wr-ext-link:hover { text-decoration: underline; }
@@ -386,16 +409,16 @@ body {
   background: var(--bg);
 }
 .wr-console-title {
-  font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
+  font-size: var(--t-micro); text-transform: uppercase; letter-spacing: .08em;
   color: var(--text-muted); margin: 0;
 }
 .wr-control { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 /* Direct child only: a choice item is itself a label, and the shared minimum
    width was being applied to each option as well. */
-.wr-control > label { font-size: 13px; min-width: 108px; }
+.wr-control > label { font-size: var(--t-body); min-width: 108px; }
 .wr-control input[type='range'] { flex: 1; accent-color: var(--accent-solid); max-width: 320px; }
 .wr-control output {
-  font-variant-numeric: tabular-nums; font-size: 13px; min-width: 2.5em;
+  font-variant-numeric: tabular-nums; font-size: var(--t-body); min-width: 2.5em;
   color: var(--text-muted);
 }
 
@@ -416,7 +439,7 @@ body {
   color: var(--select-text);
   border-radius: 6px;
   padding: 8px 10px;
-  font-size: 14px;
+  font-size: var(--t-body);
   font-family: inherit;
 }
 
@@ -426,7 +449,7 @@ body {
   display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
 }
 .wr-fixed-value { color: var(--fixed-text); }
-.wr-fixed-note { color: var(--fixed-note-text); font-size: 12px; }
+.wr-fixed-note { color: var(--fixed-note-text); font-size: var(--t-body); }
 
 .wr-empty { color: var(--text-muted); font-style: italic; margin: 0; }
 
@@ -435,33 +458,33 @@ body {
   display: inline-flex; align-items: center; gap: 8px;
   margin-top: 16px; padding: 5px 10px;
   background: var(--trace-bg); border: 1px solid var(--trace-border);
-  border-radius: 999px; color: var(--trace-text); font-size: 12px;
+  border-radius: 999px; color: var(--trace-text); font-size: var(--t-body);
 }
 .wr-trace-form { font-weight: 600; }
 .wr-trace-arrow { opacity: .6; }
 
 /* ---- RULES ---- */
-.wr-rule-head { margin: 0 0 4px; font-size: 15px; }
+.wr-rule-head { margin: 0 0 4px; font-size: var(--t-read); }
 .wr-rule-statement {
-  font-size: 15px; margin: 0 0 18px; padding: 10px 12px;
+  font-size: var(--t-read); margin: 0 0 18px; padding: 10px 12px;
   background: var(--accent-bg); border-left: 3px solid var(--accent-solid);
   border-radius: 0 6px 6px 0; color: var(--text);
 }
 .wr-rule-section { margin: 0 0 18px; }
 .wr-rule-section > h4 {
-  font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
+  font-size: var(--t-micro); text-transform: uppercase; letter-spacing: .08em;
   color: var(--text-muted); margin: 0 0 6px;
 }
 .wr-rule-section p { margin: 0; max-width: 68ch; }
 .wr-edge { border-top: 1px solid var(--border); padding: 8px 0; }
 .wr-edge:last-child { border-bottom: 1px solid var(--border); }
-.wr-edge dt { font-weight: 600; font-size: 13px; }
+.wr-edge dt { font-weight: 600; font-size: var(--t-body); }
 .wr-edge dd { margin: 2px 0 0; color: var(--text-muted); max-width: 68ch; }
 
 .wr-open { border-left: 3px solid var(--slate-9); padding-left: 12px; }
 .wr-open li { margin-bottom: 6px; max-width: 66ch; }
 
-.wr-prov { font-size: 12px; color: var(--text-muted); }
+.wr-prov { font-size: var(--t-body); color: var(--text-muted); }
 .wr-prov li { margin-bottom: 4px; }
 
 /* ---- CODE ---- */
@@ -469,9 +492,9 @@ body {
   background: var(--code-bg); color: var(--code-text);
   border-radius: 8px; padding: 16px; overflow-x: auto;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 12.5px; line-height: 1.6; margin: 0;
+  font-size: var(--t-dense); line-height: 1.6; margin: 0;
 }
-.wr-code-note { color: var(--text-muted); font-size: 12px; margin: 0 0 10px; max-width: 68ch; }
+.wr-code-note { color: var(--text-muted); font-size: var(--t-body); margin: 0 0 10px; max-width: 68ch; }
 
 /* ---- Somewhere to start ----
    Below the decision, never above it: the decision is what is being handed
@@ -481,16 +504,16 @@ body {
   border-top: 1px solid var(--border);
 }
 .wr-wiring-title {
-  margin: 0 0 6px; font-size: 13px; font-weight: 700;
+  margin: 0 0 6px; font-size: var(--t-body); font-weight: 700;
 }
 .wr-wiring-caveat {
   margin: 0 0 16px; max-width: 70ch;
-  color: var(--text-muted); font-size: 12.5px; line-height: 1.5;
+  color: var(--text-muted); font-size: var(--t-body); line-height: 1.5;
 }
 .wr-file {
   margin: 14px 0 6px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 11.5px; color: var(--text-muted);
+  font-size: var(--t-dense); color: var(--text-muted);
 }
 .wr-file:first-of-type { margin-top: 0; }
 
@@ -506,23 +529,23 @@ body {
   background: var(--surface);
 }
 .wr-contract-title {
-  margin: 0 0 10px; font-size: 10px; font-weight: 700;
+  margin: 0 0 10px; font-size: var(--t-micro); font-weight: 700;
   text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted);
 }
 .wr-contract-io { margin: 0 0 12px; display: grid; gap: 5px; }
 .wr-contract-io > div { display: grid; grid-template-columns: 68px 1fr; gap: 10px; align-items: baseline; }
 .wr-contract-io dt {
-  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  font-size: var(--t-micro); font-weight: 700; text-transform: uppercase;
   letter-spacing: .06em; color: var(--text-muted);
 }
 .wr-contract-io dd { margin: 0; }
 .wr-contract-io code, .wr-contract-wire code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 12px;
+  font-size: var(--t-body);
 }
-.wr-contract-wire { width: 100%; border-collapse: collapse; font-size: 13px; }
+.wr-contract-wire { width: 100%; border-collapse: collapse; font-size: var(--t-body); }
 .wr-contract-wire th {
-  text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+  text-align: left; font-size: var(--t-micro); text-transform: uppercase; letter-spacing: .06em;
   color: var(--text-muted); font-weight: 700;
   padding: 0 12px 5px 0; border-bottom: 1px solid var(--border);
 }
@@ -533,7 +556,7 @@ body {
 .wr-contract-wire th:first-child, .wr-contract-wire td:first-child { width: 30%; }
 .wr-contract-wire tr:last-child td { border-bottom: 0; }
 .wr-contract-note {
-  margin: 10px 0 12px; color: var(--text-muted); font-size: 12.5px;
+  margin: 10px 0 12px; color: var(--text-muted); font-size: var(--t-body);
   line-height: 1.5; max-width: 70ch;
 }
 
@@ -551,7 +574,7 @@ body {
   border-radius: 6px;
   background: color-mix(in srgb, var(--code-text) 16%, transparent);
   color: var(--code-text);
-  font: inherit; font-size: 11px; font-weight: 600;
+  font: inherit; font-size: var(--t-micro); font-weight: 600;
   padding: 5px 9px; cursor: pointer;
 }
 .wr-copy svg { width: 13px; height: 13px; }
@@ -564,7 +587,7 @@ body {
 
 .wr-foot {
   margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border);
-  color: var(--text-muted); font-size: 12px; max-width: 70ch;
+  color: var(--text-muted); font-size: var(--t-body); max-width: 70ch;
 }
 
 /* ============================================================================
@@ -584,7 +607,7 @@ body {
 
 .wr-component-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin: 30px 0 12px; }
 .wr-kind, .wr-level-tag {
-  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  font-size: var(--t-micro); font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
   padding: 3px 9px; border-radius: 999px; white-space: nowrap;
 }
 /* The rule type is the sharper of the two labels, so it carries the outline;
@@ -601,7 +624,7 @@ body {
 /* ---- The change-of-address form ---- */
 .wr-form { display: grid; gap: 14px; max-width: 460px; }
 .wr-form-row { display: grid; gap: 5px; }
-.wr-form-label { font-size: 13px; font-weight: 600; }
+.wr-form-label { font-size: var(--t-body); font-weight: 600; }
 
 /* Revealed fields carry a marker, so it is visible at a glance which parts of
    the form are there because of an answer and which are always present. */
@@ -614,7 +637,7 @@ body {
 .wr-input {
   background: var(--select-bg); border: 1px solid var(--select-border);
   color: var(--select-text); border-radius: 6px;
-  padding: 8px 10px; font-size: 14px; font-family: inherit; width: 100%;
+  padding: 8px 10px; font-size: var(--t-body); font-family: inherit; width: 100%;
 }
 .wr-input::placeholder { color: var(--text-muted); }
 
@@ -623,7 +646,7 @@ body {
 .wr-child-num {
   flex: none; width: 22px; height: 22px; border-radius: 999px;
   background: var(--surface-sunk); color: var(--text-muted);
-  font-size: 11px; display: grid; place-items: center;
+  font-size: var(--t-micro); display: grid; place-items: center;
 }
 
 /* ---- Trace block for the conditional rule ---- */
@@ -633,26 +656,26 @@ body {
 .wr-trace-block {
   margin-top: 20px; padding: 12px 14px;
   background: var(--trace-bg); border: 1px solid var(--trace-border);
-  border-radius: 8px; font-size: 12px; color: var(--trace-text);
+  border-radius: 8px; font-size: var(--t-body); color: var(--trace-text);
 }
 .wr-trace-title { font-weight: 700; margin-bottom: 6px; }
 .wr-trace-line { margin-bottom: 3px; }
-.wr-trace-line code { font-size: 11.5px; }
+.wr-trace-line code { font-size: var(--t-dense); }
 .wr-trace-kept {
   margin-top: 8px; padding-top: 8px;
   border-top: 1px solid var(--trace-border); font-style: italic;
 }
 
 /* ---- Conditions table in the Rules tab ---- */
-.wr-cond { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.wr-cond { width: 100%; border-collapse: collapse; font-size: var(--t-dense); }
 .wr-cond th {
-  text-align: left; font-size: 10px; text-transform: uppercase;
+  text-align: left; font-size: var(--t-micro); text-transform: uppercase;
   letter-spacing: .06em; color: var(--text-muted);
   padding: 0 10px 6px 0; border-bottom: 1px solid var(--border);
 }
 .wr-cond td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
-.wr-cond-label { color: var(--text-muted); font-size: 11.5px; margin-top: 2px; }
-.wr-cond-base { margin: 10px 0 0; color: var(--text-muted); font-size: 12px; }
+.wr-cond-label { color: var(--text-muted); font-size: var(--t-dense); margin-top: 2px; }
+.wr-cond-base { margin: 10px 0 0; color: var(--text-muted); font-size: var(--t-body); }
 
 /* ============================================================================
    Where the rules sit in Figma
@@ -663,7 +686,7 @@ body {
   border: 1px solid var(--border); border-radius: 10px;
   background: var(--surface);
 }
-.wr-origin-title { font-size: 16px; margin: 0 0 8px; }
+.wr-origin-title { font-size: var(--t-read); margin: 0 0 8px; }
 .wr-origin-lead { margin: 0 0 20px; color: var(--text-muted); max-width: 64ch; }
 
 .wr-origin-split { display: grid; gap: 20px; grid-template-columns: 1fr; }
@@ -675,23 +698,23 @@ body {
   border: 1px solid var(--border); border-radius: 8px; background: var(--bg);
 }
 .wr-origin-figure figcaption {
-  margin-top: 8px; font-size: 11.5px; color: var(--text-muted);
+  margin-top: 8px; font-size: var(--t-dense); color: var(--text-muted);
 }
 .wr-origin-caption {
-  font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
+  font-size: var(--t-micro); text-transform: uppercase; letter-spacing: .07em;
   color: var(--text-muted); margin: 0 0 6px;
 }
 .wr-origin-quote {
   margin: 0; padding: 12px 14px;
   background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 11.5px; line-height: 1.6; white-space: pre-wrap;
+  font-size: var(--t-dense); line-height: 1.6; white-space: pre-wrap;
   color: var(--text); overflow-x: auto;
 }
-.wr-origin-foot { margin: 20px 0 0; color: var(--text-muted); max-width: 64ch; font-size: 13px; }
+.wr-origin-foot { margin: 20px 0 0; color: var(--text-muted); max-width: 64ch; font-size: var(--t-body); }
 
 /* ---- Waiting list ---- */
-.wr-list { font-size: 13px; }
+.wr-list { font-size: var(--t-body); }
 .wr-list-row {
   display: grid;
   grid-template-columns: 52px var(--name-col, 300px) 70px 46px;
@@ -699,7 +722,7 @@ body {
   padding: 7px 0; border-bottom: 1px solid var(--border);
 }
 .wr-list-head {
-  font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+  font-size: var(--t-micro); text-transform: uppercase; letter-spacing: .06em;
   color: var(--text-muted); border-bottom-color: var(--border-strong);
 }
 .wr-col-ticket { font-variant-numeric: tabular-nums; color: var(--text-muted); }
@@ -758,28 +781,33 @@ body {
   width: 26px; height: 26px; border-radius: 999px;
   background: var(--surface); border: 2px solid var(--border);
   color: var(--text-muted);
-  font-size: 12px; font-weight: 700;
+  font-size: var(--t-body); font-weight: 700;
   display: grid; place-items: center;
 }
 
 /* The step this page is served from. Marked so the reader can place
    themselves in the process rather than having to work it out. */
+/* Filled with the link blue, not the solid one: white on blue-9 measures
+   3.26:1, and a 14px numeral is not large text. */
 .wr-step-here > .wr-step-head .wr-step-num {
-  background: var(--accent-solid); border-color: var(--accent-solid); color: #fff;
+  background: var(--head-blue-link); border-color: var(--head-blue-link);
+  /* Not #fff: the fill is repointed per mode, so the numeral on it has to be
+     too. In dark the link blue is the light one and white on it is 2.1:1. */
+  color: var(--bg);
 }
 .wr-step-here { border-left-color: var(--accent-border); }
 
 .wr-step-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
-.wr-step-head h2 { font-size: 16px; margin: 0; }
+.wr-step-head h2 { font-size: var(--t-read); margin: 0; }
 .wr-step p { margin: 0 0 10px; max-width: 62ch; }
 .wr-step p.wr-step-note {
-  color: var(--text-muted); font-size: 13px;
+  color: var(--text-muted); font-size: var(--t-body);
   border-left: 2px solid var(--border); padding-left: 12px;
   max-width: 60ch;
 }
 
 .wr-step p.wr-question {
-  font-size: 16px; font-weight: 600;
+  font-size: var(--t-read); font-weight: 600;
   background: var(--accent-bg); border: 1px solid var(--accent-border);
   border-radius: 8px; padding: 12px 14px; color: var(--text);
 }
@@ -791,11 +819,13 @@ body {
    page has to be unambiguous about: what exists and what does not.
    The states are told apart by border and fill, never by fading the label. */
 .wr-status {
-  font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+  font-size: var(--t-micro); font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
   border-radius: 999px; padding: 3px 9px; white-space: nowrap;
   border: 1px solid var(--border-strong); color: var(--text);
 }
-.wr-status-built   { border-color: var(--accent-border); color: var(--accent-text); background: var(--accent-bg); }
+/* Step 12 on blue-3, for the same reason as the trace block: step 11 lands
+   at 4.25:1 there, and these chips are 11px. */
+.wr-status-built   { border-color: var(--accent-border); color: var(--blue-12); background: var(--accent-bg); }
 .wr-status-planned { border-style: dashed; background: var(--surface-sunk); }
 .wr-status-manual  { border-style: dashed; background: var(--surface-sunk); }
 .wr-status-next    { border-color: var(--text); }
@@ -810,11 +840,11 @@ body {
    close to compare, and the rejected one loses the space its tag needs. */
 .wr-choice { display: grid; grid-template-columns: repeat(2, minmax(0, 210px)); gap: 9px 20px; }
 @media (max-width: 620px) { .wr-choice { grid-template-columns: 1fr; } }
-.wr-choice-item { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+.wr-choice-item { display: flex; align-items: center; gap: 6px; font-size: var(--t-body); cursor: pointer; }
 .wr-choice-item input { accent-color: var(--accent-solid); }
 .wr-choice-rejected span:first-of-type { color: var(--text-muted); }
 .wr-choice-tag {
-  font-size: 9px; text-transform: uppercase; letter-spacing: .06em;
+  font-size: var(--t-micro); text-transform: uppercase; letter-spacing: .06em;
   border: 1px dashed var(--border-strong); border-radius: 999px;
   padding: 1px 6px; color: var(--text-muted);
 }
@@ -826,10 +856,10 @@ body {
 .wr-edge-rejected dt { color: var(--text-muted); }
 .wr-edge dt .wr-status { margin-left: 6px; vertical-align: middle; }
 .wr-origin-figure-second { margin-top: 16px; }
-.wr-origin-caption-foot { margin: 8px 0 0; text-transform: none; letter-spacing: 0; font-size: 11.5px; }
+.wr-origin-caption-foot { margin: 8px 0 0; text-transform: none; letter-spacing: 0; font-size: var(--t-dense); }
 
 
-.wr-page-heading { font-size: 21px; margin: 30px 0 8px; }
+.wr-page-heading { font-size: var(--t-head); margin: 30px 0 8px; }
 .wr-page-lead { color: var(--text-muted); margin: 0; max-width: 62ch; }
 
 
@@ -846,24 +876,24 @@ body {
 .wr-flow-page .wr-step > p,
 .wr-flow-page .wr-origin-lead,
 .wr-flow-page .wr-payoff li {
-  font-size: 16px;
+  font-size: var(--t-read);
   line-height: 1.55;
 }
-.wr-flow-page .wr-step p.wr-step-note { font-size: 14.5px; line-height: 1.5; }
-.wr-flow-page .wr-step p.wr-question  { font-size: 18px; }
-.wr-flow-page .wr-step-head h2        { font-size: 18px; }
-.wr-flow-page .wr-origin-title        { font-size: 19px; margin-bottom: 10px; }
-.wr-flow-page .wr-origin-foot         { font-size: 15px; line-height: 1.55; }
-.wr-flow-page .wr-page-heading        { font-size: 21px; }
+.wr-flow-page .wr-step p.wr-step-note { font-size: var(--t-body); line-height: 1.5; }
+.wr-flow-page .wr-step p.wr-question  { font-size: var(--t-sub); }
+.wr-flow-page .wr-step-head h2        { font-size: var(--t-sub); }
+.wr-flow-page .wr-origin-title        { font-size: var(--t-sub); margin-bottom: 10px; }
+.wr-flow-page .wr-origin-foot         { font-size: var(--t-read); line-height: 1.55; }
+.wr-flow-page .wr-page-heading        { font-size: var(--t-head); }
 /* The table was still at workbench size while the prose around it had moved to
    reading size, which made it look like small print appended to the argument.
    It carries the argument. */
-.wr-flow-page .wr-cond                { font-size: 15px; }
-.wr-flow-page .wr-cond th             { font-size: 11px; padding-bottom: 8px; }
+.wr-flow-page .wr-cond                { font-size: var(--t-read); }
+.wr-flow-page .wr-cond th             { font-size: var(--t-micro); padding-bottom: 8px; }
 .wr-flow-page .wr-cond td             { padding: 13px 14px 13px 0; line-height: 1.5; }
-.wr-flow-page .wr-cond-label          { font-size: 13.5px; margin-top: 3px; }
-.wr-flow-page .wr-cond code           { font-size: 14px; }
-.wr-flow-page .wr-status              { font-size: 11px; padding: 4px 10px; }
+.wr-flow-page .wr-cond-label          { font-size: var(--t-body); margin-top: 3px; }
+.wr-flow-page .wr-cond code           { font-size: var(--t-body); }
+.wr-flow-page .wr-status              { font-size: var(--t-micro); padding: 4px 10px; }
 /* The artefact names are the row's handle and should not wrap to three lines
    while the status column holds a chip and empty space. */
 .wr-flow-page .wr-cond th:first-child,
@@ -875,7 +905,7 @@ body {
 .wr-signature {
   margin-top: 40px; padding-top: 16px;
   border-top: 1px solid var(--border);
-  color: var(--text-muted); font-size: 12px;
+  color: var(--text-muted); font-size: var(--t-body);
   display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline;
 }
 .wr-signature strong { color: var(--text); font-weight: 600; }
@@ -894,7 +924,7 @@ body {
   border-radius: 10px;
   background: var(--bg);
 }
-.wr-note-title { font-size: 18px; margin: 0 0 8px; }
+.wr-note-title { font-size: var(--t-sub); margin: 0 0 8px; }
 .wr-note-lead { color: var(--text-muted); margin: 0 0 16px; max-width: 62ch; font-style: italic; }
 .wr-note p { max-width: 64ch; margin: 0 0 14px; }
 .wr-note-caution {
@@ -905,7 +935,7 @@ body {
   background: var(--surface);
 }
 .wr-note-caution h3 {
-  font-size: 11px; text-transform: uppercase; letter-spacing: .07em;
+  font-size: var(--t-micro); text-transform: uppercase; letter-spacing: .07em;
   color: var(--text-muted); margin: 0 0 10px;
 }
 .wr-note-caution ul { margin: 0; padding-left: 18px; }
@@ -913,8 +943,8 @@ body {
 .wr-note-caution li:last-child { margin-bottom: 0; }
 .wr-note-foot { color: var(--text-muted); margin: 0; max-width: 64ch; }
 .wr-flow-page .wr-note p,
-.wr-flow-page .wr-note-caution li { font-size: 16px; line-height: 1.55; }
-.wr-flow-page .wr-note-lead { font-size: 16px; line-height: 1.55; }
+.wr-flow-page .wr-note-caution li { font-size: var(--t-read); line-height: 1.55; }
+.wr-flow-page .wr-note-lead { font-size: var(--t-read); line-height: 1.55; }
 
 /* ---- Reveal on hover and focus ----
    Marked with a dotted underline so it is visible that something is hidden;
@@ -928,7 +958,7 @@ body {
   display: none; width: max-content; max-width: 280px;
   background: var(--code-bg); color: var(--code-text);
   border-radius: 6px; padding: 6px 9px;
-  font-size: 12.5px; line-height: 1.45;
+  font-size: var(--t-body); line-height: 1.45;
   box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
 }
 /* :focus, not :focus-visible — the ring is only wanted for keyboard users,
@@ -952,27 +982,27 @@ body {
 .wr-panel[data-panel='rules'] p,
 .wr-panel[data-panel='rules'] li,
 .wr-panel[data-panel='rules'] dd {
-  font-size: 15.5px;
+  font-size: var(--t-read);
   line-height: 1.62;
   max-width: 58ch;
 }
 
 /* The rule itself, stated once. Large enough to be the thing you read first. */
 .wr-panel[data-panel='rules'] .wr-rule-statement {
-  font-size: 17.5px;
+  font-size: var(--t-sub);
   line-height: 1.5;
   padding: 14px 16px;
   margin-bottom: 26px;
   max-width: 56ch;
 }
 
-.wr-rule-head { font-size: 17px; margin-bottom: 6px; }
+.wr-rule-head { font-size: var(--t-sub); margin-bottom: 6px; }
 
 /* Section labels get air above them, so the panel reads as parts rather than
    as one column of text. */
 .wr-rule-section { margin: 0 0 28px; }
 .wr-rule-section > h4 {
-  font-size: 11px;
+  font-size: var(--t-micro);
   letter-spacing: .09em;
   margin-bottom: 10px;
   padding-bottom: 6px;
@@ -986,16 +1016,16 @@ body {
    Making the term stand out turns the list into something you can scan for
    the one case you are looking for. */
 .wr-edge { padding: 12px 0; }
-.wr-edge dt { font-size: 15.5px; font-weight: 650; margin-bottom: 3px; }
+.wr-edge dt { font-size: var(--t-read); font-weight: 650; margin-bottom: 3px; }
 .wr-edge dd { color: var(--text-muted); }
 
 .wr-open li, .wr-payoff li { margin-bottom: 10px; }
 .wr-open { padding-left: 14px; }
 
 /* Provenance stays small: it is a record, consulted rather than read. */
-.wr-panel[data-panel='rules'] .wr-prov li { font-size: 13px; line-height: 1.5; max-width: 74ch; }
+.wr-panel[data-panel='rules'] .wr-prov li { font-size: var(--t-body); line-height: 1.5; max-width: 74ch; }
 
 /* Tables inside the panel keep their density — a conditions table is data. */
 .wr-panel[data-panel='rules'] .wr-cond td,
-.wr-panel[data-panel='rules'] .wr-cond th { font-size: 13px; }
-.wr-panel[data-panel='rules'] .wr-cond-base { font-size: 13.5px; max-width: 70ch; }
+.wr-panel[data-panel='rules'] .wr-cond th { font-size: var(--t-body); }
+.wr-panel[data-panel='rules'] .wr-cond-base { font-size: var(--t-body); max-width: 70ch; }
