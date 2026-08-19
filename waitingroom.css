@@ -435,3 +435,13 @@ body {
 .wr-ladder { margin: 0; padding-left: 20px; }
 .wr-ladder li { margin-bottom: 5px; max-width: 68ch; }
 .wr-trace-line-off { opacity: .45; }
+
+/* Two fields per child: name and date of birth are validated differently and
+   corrected independently, so they never share one input. */
+.wr-child { align-items: start; }
+.wr-child-pair { display: grid; grid-template-columns: 1fr auto; gap: 8px; flex: 1; }
+.wr-input-date { width: auto; }
+@media (max-width: 520px) {
+  .wr-child-pair { grid-template-columns: 1fr; }
+  .wr-input-date { width: 100%; }
+}

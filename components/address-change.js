@@ -77,6 +77,7 @@ export function renderAddressChange(container) {
     'childCount',
     'childDetails',
     'churchTax',
+    'religionOther',
   ];
 
   for (const key of order) {
@@ -127,10 +128,15 @@ function revealedField(key, root) {
     wrap.append(el('label', 'wr-form-label', `Children (${n})`));
     const stack = el('div', 'wr-child-stack');
     for (let i = 0; i < n; i += 1) {
-      const id = `child-${i}`;
       const row = el('div', 'wr-child');
       row.append(el('span', 'wr-child-num', String(i + 1)));
-      row.append(textInput(id, 'Name and date of birth', root));
+      // Two fields, never one: they are validated differently and corrected
+      // independently, and a single field invites a format that then has to
+      // be parsed back apart.
+      const pair = el('div', 'wr-child-pair');
+      pair.append(textInput(`child-${i}-name`, 'Name', root));
+      pair.append(dateInput(`child-${i}-dob`, root));
+      row.append(pair);
       stack.append(row);
     }
     wrap.append(stack);
@@ -142,12 +148,26 @@ function revealedField(key, root) {
     formerName: ['Name before marriage', 'Previous surname'],
     residencePermit: ['Residence permit', 'Permit number'],
     childCount: ['Number of children', null],
+    religionOther: ['Religious community', 'Which one'],
   };
   const [label, placeholder] = labels[key] ?? [key, null];
 
   wrap.append(el('label', 'wr-form-label', label));
   wrap.append(textInput(key, placeholder ?? '', root));
   return wrap;
+}
+
+// A date gets a date field, not a text field with a format hint. Which
+// format is accepted, and whether the date is checked for plausibility, is
+// still open — see the rule's open questions.
+function dateInput(key, root) {
+  const input = el('input', 'wr-input wr-input-date');
+  input.type = 'date';
+  input.setAttribute('aria-label', 'Date of birth');
+  input.value = retained[key] ?? '';
+  input.addEventListener('input', () => { retained[key] = input.value; });
+  input.addEventListener('change', () => renderAddressChange(root));
+  return input;
 }
 
 function textInput(key, placeholder, root) {

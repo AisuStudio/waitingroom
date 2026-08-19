@@ -67,10 +67,17 @@ export const conditionalDisclosure = {
     },
     {
       field: 'childDetails',
-      label: 'One block per child',
+      label: 'Per child: name and date of birth, as two fields',
       dependsOn: 'childCount',
       when: 'childCount is 1 or more',
       test: (a) => a.hasChildren === 'yes' && Number(a.childCount) > 0,
+    },
+    {
+      field: 'religionOther',
+      label: 'Religious community — free text',
+      dependsOn: 'churchTax',
+      when: "churchTax is 'other'",
+      test: (a) => a.churchTax === 'other',
     },
   ],
 
@@ -113,6 +120,27 @@ export const conditionalDisclosure = {
               + 'between children.',
     },
     {
+      case: 'A choice offers "other"',
+      handling: 'A free-text field follows it. Without one, "other" records '
+              + 'that the answer is not on the list and nothing else — which '
+              + 'is less than the person was willing to tell us. The text is '
+              + 'retained like any other withdrawn answer if the choice '
+              + 'changes.',
+    },
+    {
+      case: '"Prefer not to say" is offered alongside "none"',
+      handling: 'They are separate values and must stay separate in the '
+              + 'record. "None" is an answer; declining is not. Collapsing '
+              + 'them turns a refusal into a statement the person did not '
+              + 'make.',
+    },
+    {
+      case: "A child's name and date of birth",
+      handling: 'Two fields, never one. They are validated differently, they '
+              + 'are corrected independently, and a single field invites a '
+              + 'format that then has to be parsed back apart.',
+    },
+    {
       case: 'A field appears after the person has scrolled past it',
       handling: 'New fields appear in place, without scrolling the page. '
               + 'Moving the viewport under someone loses their position and '
@@ -135,6 +163,14 @@ export const conditionalDisclosure = {
       by: 'Example — the deciding person would be named here',
       basis: 'Synthetic example, created to test this format on a nested case',
     },
+    {
+      date: '2026-08-19',
+      change: 'Free text added after "other"; child name and date of birth '
+            + 'split into two fields',
+      by: 'Found while working the prototype',
+      basis: 'Both gaps surfaced by using the form, not by reading the spec — '
+           + 'which is the argument for the prototype existing at all',
+    },
   ],
 
   // ------------------------------------------------- WHAT IS NOT SETTLED
@@ -149,6 +185,11 @@ export const conditionalDisclosure = {
   + 'declines to answer — "none" or "not stated"? Those are not the same.',
     'Does a partner who is not moving still have to be named, or only the '
   + 'fact that they exist?',
+    'Is the free text mandatory once "other" is chosen? If it is left empty, '
+  + 'is that recorded as "other, unspecified" or does it block submission?',
+    'What date format is accepted for a child\'s date of birth, and is it '
+  + 'checked for plausibility — a date in the future, or one that makes the '
+  + 'child older than the parent?',
   ],
 
   // ------------------------------------------------------------- THE LOGIC
