@@ -100,10 +100,11 @@ function trace(used, width) {
     box.append(line);
   });
 
-  if ((used.get('overflow') ?? 0) > 0) {
+  if ((used.get('wrap') ?? 0) > 0) {
     const warn = el('div', 'wr-trace-kept');
-    warn.textContent = 'Some rows have nothing left to give up — the column overflows '
-                     + 'rather than the family name being cut.';
+    warn.textContent = 'Some family names are wider than the column on their own. '
+                     + 'They wrap and the row grows — nothing is cut and nothing '
+                     + 'is hidden. At this width the column should be widened.';
     box.append(warn);
   }
   return box;

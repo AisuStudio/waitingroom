@@ -3,13 +3,15 @@
 
 # Person names in a fixed-width column
 
-> When a name does not fit, the ladder is: drop the original-script form, then abbreviate given names to initials, then wrap to a second line. The family name is never shortened.
+> When a name does not fit, the ladder is: drop the original-script form, abbreviate given names to initials, wrap to a second line, then both. Nothing is ever cut off at the end — the row grows taller instead.
 
 ## Rationale
 
-A name is an identifier, not a label. Truncating it can produce a different name that belongs to someone else — "Subramanian" cut short is "Subrama…", which identifies nobody, and worse, several names can collapse onto the same stub. So the family name is out of bounds.
+A name is an identifier, not a label. Cutting it off at the end can produce a different name that belongs to someone else — "Subramanian" cut short is "Subrama…", which identifies nobody, and several distinct names can collapse onto the same stub. Truncation at the end is therefore not the last resort; it is not on the ladder at all.
 
-The order of the remaining sacrifices follows how much each one costs the reader. The original-script form is a courtesy and a second rendering of information already present in transliteration — losing it costs least. An initial still identifies. A second line costs vertical space, which is why it comes last, but it costs no information at all, which is why it comes before any cut.
+"K. Schmidt-Wollenweber" is easier to match against a document than "Katharina Schmidt-Wol…", because an initial is understood as an abbreviation while a cut-off name reads as a complete one. That is why initials come before wrapping: they cost one glance, and wrapping costs the row height of the whole list.
+
+The order of sacrifices follows what each one costs the reader. The original-script form is a second rendering of a name already shown — losing it costs least. An initial still identifies. A second line costs no information at all, only space. When even that is not enough, the row grows further rather than anything being hidden: a taller row is a nuisance, a name nobody can match is a defect.
 
 ## Edge cases
 
@@ -33,9 +35,13 @@ It is the first thing dropped, not the last. It is a second rendering of a name 
 
 It is treated as the family name and never abbreviated. Mononyms are recorded in registers and must survive the column.
 
-### The family name alone does not fit
+### The family name alone is wider than the column
 
-The column overflows rather than the name being cut. A horizontal scroll is a nuisance; a wrong name is a defect.
+It wraps at spaces and hyphens and the row grows taller. It is never cut off at the end and never hidden behind a scroll or a fade — both of those make an incomplete name look complete, which is the one outcome the rule exists to prevent.
+
+### A single name part is wider than the column with nowhere to wrap
+
+It overflows visibly and the column has to be widened. This is a layout defect to be fixed, not a case to be handled by hiding part of the name.
 
 ## Open questions
 
@@ -53,15 +59,17 @@ Tried in order; the first rung that fits wins.
 
 1. `full` — Given names, family name, original script if present
 2. `no-original` — Drop the original-script form — the transliteration carries the same name
-3. `initials` — Given names abbreviated to initials, family name intact
-4. `two-line` — Wrap: given names on line one, family name on line two
-5. `overflow` — Nothing fits: show in full and let the column scroll. Never cut the family name.
+3. `initials` — Given names abbreviated to initials, family name intact — "K. Schmidt-Wollenweber"
+4. `two-line` — Given names on line one, family name on line two
+5. `initials-two-line` — Both: initial on line one, family name on line two
+6. `wrap` — Family name alone is wider than the column: it wraps at spaces and hyphens and the row grows. Nothing is hidden and nothing is cut.
 
 ## Provenance
 
 | Date | Change | By | Basis |
 |---|---|---|---|
 | 2026-08-19 | Rule created — ladder of sacrifices, family name out of bounds | Example — the deciding person would be named here | Synthetic example, tested against names from several naming systems |
+| 2026-08-19 | Truncation at the end removed from the ladder entirely; initials-plus-wrap added as a rung; the last rung now wraps instead of scrolling behind a fade | Found while working the prototype | The implementation faded the overflowing cell, which looks exactly like the cut-off name the rule forbids. An initial is read as an abbreviation; a cut-off name is read as complete. |
 
 ## Logic
 
@@ -79,6 +87,7 @@ function visibleFields(name, availableWidth, measure) {
       { step: 'no-original', line1: [givenFull, family].filter(Boolean).join(' '), line2: null, original: false },
       { step: 'initials',    line1: [initials, family].filter(Boolean).join(' '),  line2: null, original: false },
       { step: 'two-line',    line1: givenFull || family, line2: givenFull ? family : null,      original: false },
+      { step: 'initials-two-line', line1: initials || family, line2: initials ? family : null,  original: false },
     ];
 
     for (const c of candidates) {
@@ -89,11 +98,12 @@ function visibleFields(name, availableWidth, measure) {
       if (widest <= availableWidth) return c;
     }
 
-    // Nothing fits. The family name is still not cut.
+    // Even the family name alone is wider than the column. It wraps and the
+    // row grows — nothing is cut and nothing is hidden.
     return {
-      step: 'overflow',
-      line1: [givenFull, family].filter(Boolean).join(' '),
-      line2: null,
+      step: 'wrap',
+      line1: initials || null,
+      line2: family,
       original: false,
     };
   }
