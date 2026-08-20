@@ -226,6 +226,12 @@ body {
 
 .wr-subtitle {
   margin: 11px 0 0;
+  /* A measure, not the column width. The longest claim line sets it: it runs
+     47ch, so 49ch clears it on any font while the definition above breaks to
+     two lines against the same right edge. Text that stops where the line
+     below it stops reads as placed; text running the full column reads as
+     poured in. */
+  max-width: 49ch;
   color: var(--text);
   font-size: var(--t-read);
   font-weight: 700;
