@@ -15,6 +15,12 @@ const PAGES = [
   { file: 'changelog.html', label: 'Changes' },
 ];
 
+// What it is, in one line — the definition a reader needs before the claim
+// below it means anything.
+const DEFINITION =
+  'A handover concept with tangible artefacts, slotted into an existing '
+  + 'workflow to make agentic building more efficient.';
+
 // Two lines, because the break is part of the design: one line states what
 // the room is, the other what it is for.
 const CLAIM = [
@@ -51,6 +57,7 @@ export function renderHeader(mount) {
   mount.append(top, el('div', 'wr-rule wr-rule-heavy'));
 
   const claim = el('p', 'wr-subtitle');
+  claim.append(el('span', 'wr-definition', DEFINITION));
   CLAIM.forEach((line) => claim.append(el('span', null, line)));
   mount.append(claim);
 

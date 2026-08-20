@@ -234,6 +234,10 @@ body {
                                    sentence and cased by the style */
 }
 .wr-subtitle span { display: block; }
+/* One blank line, not a guessed gap: exactly one line box of the block it
+   sits in, so the definition reads as its own paragraph without introducing
+   a spacing value the page does not otherwise use. */
+.wr-definition { margin-bottom: 1.372em; }
 
 /* ---- Colour mode ----
    Two named states rather than one button labelled with the other mode: the
