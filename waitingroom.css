@@ -10,9 +10,11 @@
    saturated solids, 11/12 text. That is why no contrast is computed by hand
    here: steps 11 and 12 on steps 1/2 are text-safe by construction.
 
-   The hex values were verified against the official palette
-   (@radix-ui/colors 3.0.0, unpkg) on 2026-08-20: all 22 stocked values match
-   exactly, light and dark. The demo says Radix and is Radix.
+   The scale values were verified against the official palette
+   (@radix-ui/colors 3.0.0, unpkg) on 2026-08-20: all 22 stocked steps match
+   exactly, light and dark. One value is NOT from the scale and says so where
+   it is defined — blue-11-deep. Everything else that calls itself a Radix
+   step is one.
    ========================================================================= */
 
 :root {
@@ -22,7 +24,6 @@
      The Radix step numbers are kept (6 stays 6) so the reference holds. */
   --slate-1:  #fcfcfd;
   --slate-3:  #f0f0f3;
-  --slate-6:  #d9d9e0;
   --slate-8:  #b9bbc6;
   --slate-11: #60646c;
   --slate-12: #1c2024;
@@ -38,6 +39,7 @@
      4.5:1 requirement. The light scale has no step between 11 and 12, so this
      is a documented departure from it rather than a value out of it. */
   --blue-11-deep: #0b5cad;
+
 }
 
 :root {
@@ -45,7 +47,10 @@
      Only this tier is repointed when the mode changes. Components never
      reach for a primitive — that would defeat the swap the whole structure
      exists to make possible. */
-  --ground:        var(--slate-6);   /* what the sheet lies on */
+  /* Step 3 in both modes: the sheet is slate-1, which is the brighter of the
+     two in light and the darker one in dark. One value covers both — the
+     mode-specific repoint this used to need is gone. */
+  --ground:        var(--slate-3);
   --bg:            var(--slate-1);   /* the sheet the work sits on */
   --surface-sunk:  var(--slate-3);
   /* One border, step 8. There were two (7 and 8) and the difference read as
@@ -100,13 +105,8 @@
 /* Dark mode: ONLY the semantic tier repoints.
    No primitive changes, no component variable is touched. */
 :root[data-theme='dark'] {
-  /* The ground is repointed rather than inherited: in light the sheet is the
-     brighter of the two, in dark it is the darker one, and only the semantic
-     tier knows that. */
-  --ground: var(--slate-3);
-
-  --slate-1:  #111113;  --slate-3:  #212225;  --slate-6:  #363a3f;
-  --slate-8:  #5a6169;  --slate-11: #b0b4ba;  --slate-12: #edeef0;
+  --slate-1:  #111113;  --slate-3:  #212225;  --slate-8:  #5a6169;
+  --slate-11: #b0b4ba;  --slate-12: #edeef0;
 
   --blue-3:  #0d2847;  --blue-7:  #205d9e;  --blue-9:  #0090ff;
   --blue-11: #70b8ff;  --blue-12: #c2e6ff;
@@ -123,6 +123,15 @@
    with three components. Every size below is one of these; a literal px
    font-size anywhere else is a bug, and greppable as one.
    ========================================================================= */
+
+:root {
+  /* Corner radius. There were five loose values (3, 6, 8, 10, 999) and no
+     token — the same sprawl the type scale had. Three now: a small one for
+     controls, one for boxes, and the pill. */
+  --r-sm:   4px;
+  --r-md:   8px;
+  --r-pill: 999px;
+}
 
 :root {
   --t-small: 12px;   /* everything below body: labels, chips, code, dense tables */
@@ -187,6 +196,7 @@ body {
    one left edge rather than two. */
 .wr-canvas {
   display: block;
+  border-radius: var(--r-sm);
   margin: 0;
   padding: 30px 26px 34px;
   background: var(--bg);
@@ -271,7 +281,7 @@ body {
   /* 1.5px border on a 15.5px line keeps the pill at the frame's 18.5px while
      carrying the heavier stroke. */
   border: 1.5px solid var(--text);
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background: transparent;
   font: inherit;
   font-size: var(--t-small);
@@ -329,7 +339,7 @@ body {
    blue. A filled chip here would have been a third convention. */
 .wr-level-chip {
   border: 1.5px solid var(--accent-text);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: transparent;
   color: var(--accent-text);
   padding: 5px 13px;
@@ -396,7 +406,7 @@ body {
   gap: 16px;                      /* two controls stacked with no gap read as
                                      one control with a stray second row */
   border: 1px dashed var(--border);
-  border-radius: 8px;
+  border-radius: var(--r-md);
   padding: 15px 16px;
   margin-bottom: 20px;
   background: var(--bg);
@@ -430,7 +440,7 @@ body {
   background: var(--select-bg);
   border: 1px solid var(--select-border);
   color: var(--select-text);
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   padding: 8px 10px;
   font-size: var(--t-body);
   font-family: inherit;
@@ -438,7 +448,7 @@ body {
 
 .wr-fixed {
   background: var(--fixed-bg);
-  border-radius: 6px; padding: 8px 10px;
+  border-radius: var(--r-sm); padding: 8px 10px;
   display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
 }
 .wr-fixed-value { color: var(--fixed-text); }
@@ -451,7 +461,7 @@ body {
   display: inline-flex; align-items: center; gap: 8px;
   margin-top: 16px; padding: 5px 10px;
   background: var(--trace-bg); border: 1px solid var(--trace-border);
-  border-radius: 999px; color: var(--trace-text); font-size: var(--t-body);
+  border-radius: var(--r-pill); color: var(--trace-text); font-size: var(--t-body);
 }
 .wr-trace-form { font-weight: 600; }
 .wr-trace-arrow { opacity: .6; }
@@ -483,7 +493,7 @@ body {
 /* ---- CODE ---- */
 .wr-code {
   background: var(--code-bg); color: var(--code-text);
-  border-radius: 8px; padding: 16px; overflow-x: auto;
+  border-radius: var(--r-md); padding: 16px; overflow-x: auto;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: var(--t-small); line-height: 1.6; margin: 0;
 }
@@ -516,7 +526,7 @@ body {
 .wr-contract {
   border: 1px solid var(--border);
   border-left: 3px solid var(--accent-solid);
-  border-radius: 8px;
+  border-radius: var(--r-md);
   padding: 14px 16px 4px;
   margin: 0 0 16px;
   background: var(--bg);
@@ -564,7 +574,7 @@ body {
      An opacity step used to sit on top of this and quietly undid it — the
      measurement is of the computed colour, the eye sees what opacity leaves. */
   border: 1px solid color-mix(in srgb, var(--code-text) 55%, transparent);
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   background: color-mix(in srgb, var(--code-text) 16%, transparent);
   color: var(--code-text);
   font: inherit; font-size: var(--t-small); font-weight: 600;
@@ -601,7 +611,7 @@ body {
 .wr-component-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin: 30px 0 12px; }
 .wr-kind, .wr-level-tag {
   font-size: var(--t-small); font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
-  padding: 3px 9px; border-radius: 999px; white-space: nowrap;
+  padding: 3px 9px; border-radius: var(--r-pill); white-space: nowrap;
 }
 /* The rule type is the sharper of the two labels, so it carries the outline;
    the level is context and stays quiet. */
@@ -629,7 +639,7 @@ body {
 
 .wr-input {
   background: var(--select-bg); border: 1px solid var(--select-border);
-  color: var(--select-text); border-radius: 6px;
+  color: var(--select-text); border-radius: var(--r-sm);
   padding: 8px 10px; font-size: var(--t-body); font-family: inherit; width: 100%;
 }
 .wr-input::placeholder { color: var(--text-muted); }
@@ -637,7 +647,7 @@ body {
 .wr-child-stack { display: grid; gap: 8px; }
 .wr-child { display: flex; align-items: center; gap: 10px; }
 .wr-child-num {
-  flex: none; width: 22px; height: 22px; border-radius: 999px;
+  flex: none; width: 22px; height: 22px; border-radius: var(--r-pill);
   background: var(--surface-sunk); color: var(--text-muted);
   font-size: var(--t-small); display: grid; place-items: center;
 }
@@ -649,7 +659,7 @@ body {
 .wr-trace-block {
   margin-top: 20px; padding: 12px 14px;
   background: var(--trace-bg); border: 1px solid var(--trace-border);
-  border-radius: 8px; font-size: var(--t-body); color: var(--trace-text);
+  border-radius: var(--r-md); font-size: var(--t-body); color: var(--trace-text);
 }
 .wr-trace-title { font-weight: 700; margin-bottom: 6px; }
 .wr-trace-line { margin-bottom: 3px; }
@@ -676,7 +686,7 @@ body {
 
 .wr-origin {
   margin: 56px 0 0; padding: 24px;
-  border: 1px solid var(--border); border-radius: 10px;
+  border: 1px solid var(--border); border-radius: var(--r-md);
   background: var(--bg);
 }
 .wr-origin-title { font-size: var(--t-read); margin: 0 0 8px; }
@@ -688,7 +698,7 @@ body {
 .wr-origin-figure { margin: 0; }
 .wr-origin-figure img {
   width: 100%; height: auto; display: block;
-  border: 1px solid var(--border); border-radius: 8px; background: var(--bg);
+  border: 1px solid var(--border); border-radius: var(--r-md); background: var(--bg);
 }
 .wr-origin-figure figcaption {
   margin-top: 8px; font-size: var(--t-small); color: var(--text-muted);
@@ -699,7 +709,7 @@ body {
 }
 .wr-origin-quote {
   margin: 0; padding: 12px 14px;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: var(--t-small); line-height: 1.6; white-space: pre-wrap;
   color: var(--text); overflow-x: auto;
@@ -771,7 +781,7 @@ body {
 
 .wr-step-num {
   position: absolute; left: -14px; top: 0;
-  width: 26px; height: 26px; border-radius: 999px;
+  width: 26px; height: 26px; border-radius: var(--r-pill);
   background: var(--bg); border: 2px solid var(--border);
   color: var(--text-muted);
   font-size: var(--t-body); font-weight: 700;
@@ -806,7 +816,7 @@ body {
 .wr-step p.wr-question {
   font-size: var(--t-read); font-weight: 600;
   background: var(--accent-bg); border: 1px solid var(--accent-border);
-  border-radius: 8px; padding: 12px 14px; color: var(--text);
+  border-radius: var(--r-md); padding: 12px 14px; color: var(--text);
 }
 
 /* Status is stated everywhere, because a process diagram that does not
@@ -817,7 +827,7 @@ body {
    The states are told apart by border and fill, never by fading the label. */
 .wr-status {
   font-size: var(--t-small); font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
-  border-radius: 999px; padding: 3px 9px; white-space: nowrap;
+  border-radius: var(--r-pill); padding: 3px 9px; white-space: nowrap;
   border: 1px solid var(--border); color: var(--text);
 }
 /* Step 12 on blue-3, for the same reason as the trace block: step 11 lands
@@ -842,7 +852,7 @@ body {
 .wr-choice-rejected span:first-of-type { color: var(--text-muted); }
 .wr-choice-tag {
   font-size: var(--t-small); text-transform: uppercase; letter-spacing: .06em;
-  border: 1px dashed var(--border); border-radius: 999px;
+  border: 1px dashed var(--border); border-radius: var(--r-pill);
   padding: 1px 6px; color: var(--text-muted);
 }
 .wr-trace-block-rejected {
@@ -904,7 +914,7 @@ body {
 .wr-class {
   font-size: var(--t-small); font-weight: 600;
   text-transform: uppercase; letter-spacing: .06em;
-  border-radius: 999px; padding: 3px 9px; white-space: nowrap;
+  border-radius: var(--r-pill); padding: 3px 9px; white-space: nowrap;
   border: 1px solid var(--border); color: var(--text);
 }
 .wr-class-token     { border-style: dashed; }
@@ -957,7 +967,7 @@ body {
   padding: 22px 24px;
   border: 1px solid var(--border);
   border-left: 4px solid var(--accent-solid);
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background: var(--bg);
 }
 .wr-note-title { font-size: var(--t-sub); margin: 0 0 8px; }
@@ -965,7 +975,7 @@ body {
 .wr-note p { max-width: 64ch; margin: 0 0 14px; }
 .wr-note-caution {
   border: 1px dashed var(--border);
-  border-radius: 8px;
+  border-radius: var(--r-md);
   padding: 14px 16px;
   margin: 18px 0;
   background: var(--bg);
@@ -987,13 +997,13 @@ body {
    an abbreviation nobody knows can be expanded is just an abbreviation. */
 .wr-name-reveal { position: relative; cursor: help; }
 .wr-name-reveal .wr-name-line { border-bottom: 1px dotted var(--border); }
-.wr-name-reveal:focus-visible { outline: 2px solid var(--accent-solid); outline-offset: 2px; border-radius: 3px; }
+.wr-name-reveal:focus-visible { outline: 2px solid var(--accent-solid); outline-offset: 2px; border-radius: var(--r-sm); }
 
 .wr-name-tip {
   position: absolute; left: 0; top: calc(100% + 6px); z-index: 5;
   display: none; width: max-content; max-width: 280px;
   background: var(--code-bg); color: var(--code-text);
-  border-radius: 6px; padding: 6px 9px;
+  border-radius: var(--r-sm); padding: 6px 9px;
   font-size: var(--t-body); line-height: 1.45;
   box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
 }
