@@ -1,7 +1,13 @@
 # waitingroom
 
+A handover concept with tangible artefacts, slotted into an existing workflow
+to make agentic building more efficient.
+
 A holding room for behaviour rules — the step between a specification and a
-built component.
+built component. Nothing here replaces a step the team already has: four of
+the eight steps in the workflow are marked as theirs. It fills the gap between
+Figma and implementation, where the behaviour of a component is decided and
+currently written down nowhere.
 
 ## What this is not
 
